@@ -10,9 +10,9 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
     };
   
     const handleAgeChange = (field, value) => {
-      const newValue = Math.max(parseInt(value) || 0, 
-        field === 'fromAge' ? inputs.currentAge : inputs.fromAge
-      );
+      // const newValue = Math.max(parseInt(value) || 0, 
+      //   field === 'fromAge' ? inputs.currentAge : inputs.fromAge
+      // );
       setInputs({ ...inputs, [field]: newValue.toString() });
     };
   
@@ -28,7 +28,7 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
   
           .form-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr auto;
+            grid-template-columns: 1fr 1fr auto;
             gap: 1rem;
             align-items: center;
           }
@@ -114,9 +114,10 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
             type="number"
             className="form-input"
             value={inputs.currentAge}
-            onChange={(e) => handleAgeChange('currentAge', e.target.value)}
-            min="18"
-            max="100"
+            //onChange={(e) => handleAgeChange('currentAge', e.target.value)}
+            onChange={(e) => setInputs({...inputs, currentAge: e.target.value})}
+            min="1"
+            max={inputs.fromAge}
           />
           <div className="spacer" />
   
@@ -126,14 +127,17 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
               type="number"
               className="form-input"
               value={inputs.fromAge}
-              onChange={(e) => handleAgeChange('fromAge', e.target.value)}
+              //onChange={(e) => handleAgeChange('fromAge', e.target.value)}
+              onChange={(e) => setInputs({...inputs, fromAge: e.target.value})}
               min={inputs.currentAge}
+              max={inputs.toAge}
             />
             <input
               type="number"
               className="form-input"
               value={inputs.toAge}
-              onChange={(e) => handleAgeChange('toAge', e.target.value)}
+              //onChange={(e) => handleAgeChange('toAge', e.target.value)}
+              onChange={(e) => setInputs({...inputs, toAge: e.target.value})}
               min={inputs.fromAge}
             />
           </div>
