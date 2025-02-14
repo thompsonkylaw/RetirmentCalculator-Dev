@@ -34,7 +34,7 @@ const App = () => {
   };
 
   //console.log('All inputs:', combinedInputs);
-  
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //Calculate the first row of data
 
   let row_Year = [];
@@ -47,7 +47,7 @@ const App = () => {
   
 
   row_Year[0] = new Date().getFullYear();
-  row_Age[0]=combinedInputs.currentAge;
+  row_Age[0]=Number(combinedInputs.currentAge);
   row_Stock[0]=       calculateValue(combinedInputs.expectedReturn.stock, combinedInputs.monthlySavings.stock, combinedInputs.existingAssets.stock);
   row_MPF[0]=         calculateValue(combinedInputs.expectedReturn.mpf,   combinedInputs.monthlySavings.mpf, combinedInputs.existingAssets.mpf);
   row_Other[0] =calculateValue(combinedInputs.expectedReturn.other, combinedInputs.monthlySavings.other, combinedInputs.existingAssets.other);
@@ -189,15 +189,23 @@ const App = () => {
           grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
           gap: 30px;
           margin: 2rem 0;
+          //font-size: 48px;
         }
         
+        .result td {
+          font-size: 18px;  /* 調大字體 */
+          padding: 0px;    /* 增加間距 */
+          text-align: center;
+          //border: 1px solid #ddd; /* 加上邊框 */
+        }
+
         @media (max-width: 768px) {
           .input-container {
             grid-template-columns: 1fr;
           }
         }
       `}</style>
-      <Header />
+      {/*<Header />*/}
       
       <div className="input-container">
         <UserInput3 

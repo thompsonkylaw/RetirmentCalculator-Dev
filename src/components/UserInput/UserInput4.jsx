@@ -125,7 +125,7 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
             key={field}
             type="number"
             className="number-input"
-            step="0.1"
+            step="1"
             value={inputs.expectedReturn[field]}
             onChange={(e) => setInputs({
               ...inputs,
