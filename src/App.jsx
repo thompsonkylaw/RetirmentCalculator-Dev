@@ -22,7 +22,7 @@ const App = () => {
 
   // State for UserInput4
   const [userInput4, setUserInput4] = useState({
-    monthlySavings: { stock: 0, mpf: 3000, other: 0, extra: 11709 },
+    monthlySavings: { stock: 0, mpf: 3000, other: 0, extra: 11708.9651157578 },
     existingAssets: { stock: 200000, mpf: 300000, other: 300000, extra: 0 },
     expectedReturn: { stock: 5, mpf: 5, other: 0.1, extra: 5 }
   });
@@ -187,25 +187,56 @@ const App = () => {
     // Add your calculation logic here
   };
 
-  const calculateRightSeek = () => {
+  const calculateRightSeek = (lastRowOfStock,lastRowOfMPF,lastRowOfOther) => {
+    
+    let P18;
 
+    const P19 = combinedInputs.existingAssets.extra;
+    const P20 = combinedInputs.expectedReturn.extra/100;
     const G17 = combinedInputs.retirementGoal;
+
     const G18 = combinedInputs.inflationAdjustment/100;
     const G19 = combinedInputs.currentAge;
     const G20 = combinedInputs.toAge;
     const G21 = combinedInputs.postRetirementReturn/100;
-    const E20 = combinedInputs.fromAge
-    ;
+    const E20 = combinedInputs.fromAge;
+    
+    console.log('retirementGoal', G17);
+    console.log('inflationAdjustment', G18);
+
     // Combine and process inputs from both forms
-      let G24;
-      if (G21=== G18) {
+    let G24;
+    if (G21=== G18) {
         G24 = G17 * (G20 - E20 + 1) * 12 * Math.pow(1 + G18, E20 - G19);
       } else {
-        G24 =(G17 * (1 - Math.pow((1 + G18) / (1 + 21), G20 - E20 + 1)) * 12 * Math.pow(1 + G18, E20 - G19) * (1 + G21)) / (G21 - G18);
+        G24 =(G17 * (1 - Math.pow((1 + G18) / (1 + G21), G20 - E20 + 1)) * 12 * Math.pow(1 + G18, E20 - G19) * (1 + G21)) / (G21 - G18);
       };
+      
+    const lastRowOfExtra = G24 - lastRowOfStock -lastRowOfMPF - lastRowOfOther;
+    console.log('G24', G24);  
+    // console.log('lastRowOfStock', lastRowOfStock);  
+    // console.log('lastRowOfMPF', lastRowOfMPF);  
+    // console.log('lastRowOfOther', lastRowOfOther);  
+    console.log('lastRowOfExtra', lastRowOfExtra);
     
-    console.log('G24', G24);
+    //P18 = ((G24 - P19 * Math.pow(1 + P20 / 12, 12 * (E20 - G19))) * (P20 / 12)) / (Math.pow(1 + P20 / 12, 12 * (E20 - G19)) - 1);
+    //G24 = 13302506;
+    P18 =  (lastRowOfExtra - P19 * (1 + P20 / 12) ** (12 * (E20 - G19))) * (P20 / 12) / ((1 + P20 / 12) ** (12 * (E20 - G19)) - 1);
+ 
     
+    console.log('P18', P18); 
+    
+    // setUserInput4(prev => ({
+    //   ...prev,
+    //   monthlySavings: {...prev, extra: P18 },
+    // }));
+    setUserInput4(prev => ({
+      ...prev,
+      monthlySavings: {
+        ...prev.monthlySavings,  // Preserve other savings values
+        extra: P18               // Update only the extra field
+      }
+    }));
     // Add your calculation logic here
   };
 
@@ -251,7 +282,7 @@ const App = () => {
         <UserInput4 
           inputs={userInput4}
           setInputs={setUserInput4}
-          onCalculate={calculateRightSeek}
+          onCalculate={()=>calculateRightSeek(row_Stock[row_Stock.length - 1],row_MPF[row_MPF.length - 1],row_Other[row_Other.length - 1])}
         />
       </div >
       <div className="input-container">

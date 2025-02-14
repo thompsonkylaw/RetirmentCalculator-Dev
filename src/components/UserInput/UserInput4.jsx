@@ -5,12 +5,12 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
 
   // Handlers
   const handleCurrencyChange = (category, field, value) => {
-    const parsedValue = parseCurrency(value);
+   //const parsedValue = parseCurrency(value);
     setInputs({
       ...inputs,
       [category]: {
         ...inputs[category],
-        [field]: parsedValue
+        [field]: value
       }
     });
   };
@@ -98,11 +98,13 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
         <div className="grid-label">Monthly Savings</div>
         {['stock', 'mpf', 'other', 'extra'].map((field) => (
           <input
-            key={field}
-            type="text"
-            className="currency-input"
-            value={formatCurrency(inputs.monthlySavings[field])}
-            onChange={(e) => handleCurrencyChange('monthlySavings', field, e.target.value)}
+          key={field}
+          type="number"
+          className="currency-input"
+          step="any"  // Allow any decimal value
+          value={inputs.monthlySavings[field]}
+          onChange={(e) => handleCurrencyChange('monthlySavings', field, e.target.value)}
+          inputMode="decimal"  // Better mobile keyboard
           />
         ))}
         <button className="seek-button" onClick={onCalculate}>Seek</button>
@@ -111,9 +113,10 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
         {['stock', 'mpf', 'other', 'extra'].map((field) => (
           <input
             key={field}
-            type="text"
+            type="number"
             className="currency-input"
-            value={formatCurrency(inputs.existingAssets[field])}
+            //value={formatCurrency(inputs.existingAssets[field])}
+            value={inputs.existingAssets[field]}
             onChange={(e) => handleCurrencyChange('existingAssets', field, e.target.value)}
           />
         ))}
