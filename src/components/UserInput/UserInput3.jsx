@@ -92,11 +92,13 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
         <div className="form-grid">
           <label className="form-label">Monthly Income Goal</label>
           <input
-            type="text"
+            type="number"
             className="form-input"
-            value={formatCurrency(inputs.retirementGoal)}
+            //value={formatCurrency(inputs.retirementGoal)}
+            value={inputs.retirementGoal}
             onChange={handleRetirementGoal}
             onBlur={() => setInputs({...inputs, retirementGoal: inputs.retirementGoal || 0})}
+            step={0.01}
           />
           <button className="seek-button" onClick={onCalculate}>Seek</button>
   

@@ -162,14 +162,49 @@ const App = () => {
 
 
   ///////////////////////////////////////////////////////////////////////////
-  const calculateHandler = () => {
+  const calculateLeftSeek = (G24) => {
+    
+    let G17;
+    const G18 = combinedInputs.inflationAdjustment/100;
+    const G19 = combinedInputs.currentAge;
+    const G20 = combinedInputs.toAge;
+    const G21 = combinedInputs.postRetirementReturn/100;
+    const E20 = combinedInputs.fromAge
+    ;
     // Combine and process inputs from both forms
-    const combinedInputs = {
-      ...userInput3,
-      ...userInput4,
-      duration: userInput3.toAge - userInput3.fromAge
-    };
-    console.log('All inputs:', combinedInputs);
+    if (G21 === G18) {
+      G17 = G24 / ((G20 - E20 + 1) * 12 * Math.pow(1 + G18, E20 - G19));
+    } else {
+      G17 = (G24 * (G21 - G18) /((1 - Math.pow((1 + G18) / (1 + G21), G20 - E20 + 1)) * 12 * Math.pow(1 + G18, E20 - G19) * (1 + G21)) );
+    }
+    
+    console.log('G17', G17);
+    setUserInput3(prev => ({
+      ...prev,
+      retirementGoal: G17
+    }));
+    console.log('All inputsss:', combinedInputs);
+    // Add your calculation logic here
+  };
+
+  const calculateRightSeek = () => {
+
+    const G17 = combinedInputs.retirementGoal;
+    const G18 = combinedInputs.inflationAdjustment/100;
+    const G19 = combinedInputs.currentAge;
+    const G20 = combinedInputs.toAge;
+    const G21 = combinedInputs.postRetirementReturn/100;
+    const E20 = combinedInputs.fromAge
+    ;
+    // Combine and process inputs from both forms
+      let G24;
+      if (G21=== G18) {
+        G24 = G17 * (G20 - E20 + 1) * 12 * Math.pow(1 + G18, E20 - G19);
+      } else {
+        G24 =(G17 * (1 - Math.pow((1 + G18) / (1 + 21), G20 - E20 + 1)) * 12 * Math.pow(1 + G18, E20 - G19) * (1 + G21)) / (G21 - G18);
+      };
+    
+    console.log('G24', G24);
     
     // Add your calculation logic here
   };
@@ -211,12 +246,12 @@ const App = () => {
         <UserInput3 
           inputs={userInput3}
           setInputs={setUserInput3}
-          onCalculate={calculateHandler}
+          onCalculate={()=>calculateLeftSeek(row_G[0])}
         />
         <UserInput4 
           inputs={userInput4}
           setInputs={setUserInput4}
-          onCalculate={calculateHandler}
+          onCalculate={calculateRightSeek}
         />
       </div >
       <div className="input-container">
