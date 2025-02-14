@@ -7,7 +7,7 @@ const ChartComponent = ( props) => {
 //     name: item.name.toString(),
 //     sum: Number(item.sum)
 //   })) || [];
-  console.log("chartData from app",props.data);
+  //console.log("chartData from app",props.data);
 
   return (
     <div style={{ width: '100%', height: '400px', margin: '20px 0' }}>
