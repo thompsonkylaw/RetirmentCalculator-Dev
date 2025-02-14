@@ -16,7 +16,7 @@ const  ResultTable4= (props) => {
         </thead>
         <tbody>
           {props.data.map((tableData4) =>(
-          <tr>
+          <tr key={tableData4.year}>
             <td>{Math.round(tableData4.year)}</td>
             <td>{Math.round(tableData4.age)}</td>
             <td>{formatCurrency(Math.round(tableData4.stock))}</td>

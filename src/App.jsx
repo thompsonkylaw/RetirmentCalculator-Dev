@@ -66,7 +66,7 @@ const App = () => {
 
   //Calculate the rest of row of data
   const numOfWrokingYear = combinedInputs.fromAge - combinedInputs.currentAge;
-  console.log('numOfWrokingYear:',numOfWrokingYear);
+  //console.log('numOfWrokingYear:',numOfWrokingYear);
   
 
   for (let i = 1; i < numOfWrokingYear; i++) {
@@ -178,12 +178,12 @@ const App = () => {
       G17 = (G24 * (G21 - G18) /((1 - Math.pow((1 + G18) / (1 + G21), G20 - E20 + 1)) * 12 * Math.pow(1 + G18, E20 - G19) * (1 + G21)) );
     }
     
-    console.log('G17', G17);
+    //console.log('G17', G17);
     setUserInput3(prev => ({
       ...prev,
       retirementGoal: G17
     }));
-    console.log('All inputsss:', combinedInputs);
+    //console.log('All inputs:', combinedInputs);
     // Add your calculation logic here
   };
 
@@ -213,18 +213,18 @@ const App = () => {
       };
       
     const lastRowOfExtra = G24 - lastRowOfStock -lastRowOfMPF - lastRowOfOther;
-    console.log('G24', G24);  
+    //console.log('G24', G24);  
     // console.log('lastRowOfStock', lastRowOfStock);  
     // console.log('lastRowOfMPF', lastRowOfMPF);  
     // console.log('lastRowOfOther', lastRowOfOther);  
-    console.log('lastRowOfExtra', lastRowOfExtra);
+    //console.log('lastRowOfExtra', lastRowOfExtra);
     
     //P18 = ((G24 - P19 * Math.pow(1 + P20 / 12, 12 * (E20 - G19))) * (P20 / 12)) / (Math.pow(1 + P20 / 12, 12 * (E20 - G19)) - 1);
     //G24 = 13302506;
     P18 =  (lastRowOfExtra - P19 * (1 + P20 / 12) ** (12 * (E20 - G19))) * (P20 / 12) / ((1 + P20 / 12) ** (12 * (E20 - G19)) - 1);
  
     
-    console.log('P18', P18); 
+    //console.log('P18', P18); 
     
     // setUserInput4(prev => ({
     //   ...prev,
