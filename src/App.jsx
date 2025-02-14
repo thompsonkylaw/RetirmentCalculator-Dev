@@ -4,11 +4,13 @@ import UserInput3 from "./components/UserInput/UserInput3";
 import UserInput4 from "./components/UserInput/UserInput4";
 import ResultTable3 from "./components/ResultTable/ResultTable3";
 import ResultTable4 from "./components/ResultTable/ResultTable4";
+import Chart from './components/Chart/Chart';
 
 
 const App = () => {
   const tableData3 =[];
   const tableData4 =[];
+  const chartData =[];
 
   // State for UserInput3
   const [userInput3, setUserInput3] = useState({
@@ -63,6 +65,11 @@ const App = () => {
     extra: row_Extra[0],
     sum: row_sum[0]
   });
+  chartData.push({
+    name: String(row_Age[0]),
+    sum: row_sum[0]
+
+  });
 
   //Calculate the rest of row of data
   const numOfWrokingYear = combinedInputs.fromAge - combinedInputs.currentAge;
@@ -89,6 +96,12 @@ const App = () => {
       extra: row_Extra[i],
       sum: row_sum[i]
     });
+    chartData.push({
+      name: String(row_Age[i]),
+      sum: row_sum[i]
+  
+    });
+  
   }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   let row_Year3 = [];
@@ -136,6 +149,12 @@ const App = () => {
     G: row_G[1],
     
   });
+  chartData.push({
+    name: String(row_Age3[1]),
+    sum: row_G[1]
+
+  });
+
 
   for (let i = 2; i < combinedInputs.toAge - combinedInputs.fromAge+2; i++) {
      
@@ -158,8 +177,13 @@ const App = () => {
       F: row_F[i],
       G: row_G[i]
     });
+    chartData.push({
+      name: String(row_Age3[i]),
+      sum: row_G[i]
+  
+    });
   }
-
+ //console.log("chartData from app",chartData);
 
   ///////////////////////////////////////////////////////////////////////////
   const calculateLeftSeek = (G24) => {
@@ -285,6 +309,7 @@ const App = () => {
           onCalculate={()=>calculateRightSeek(row_Stock[row_Stock.length - 1],row_MPF[row_MPF.length - 1],row_Other[row_Other.length - 1])}
         />
       </div >
+      <Chart data={chartData}/>
       <div className="input-container">
       <ResultTable3 data={tableData3}/>
       <ResultTable4 data={tableData4}/>
