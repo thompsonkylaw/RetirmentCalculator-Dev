@@ -24,7 +24,7 @@ const ChartComponent = ( props) => {
               position: 'bottom',
               offset: 0 
             }}
-            tick={{ fill: '#666' }}
+            tick={{ fill: '#667' }}
           />
           <YAxis
             label={{ 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from "./components/Header/Header";
 import UserInput3 from "./components/UserInput/UserInput3";
 import UserInput4 from "./components/UserInput/UserInput4";
@@ -7,11 +7,58 @@ import ResultTable4 from "./components/ResultTable/ResultTable4";
 import Chart from './components/Chart/Chart';
 
 
+// Initial state constants
+const initialUserInput3 = {
+  retirementGoal: 20000,
+  inflationAdjustment: 4,
+  currentAge: 30,
+  fromAge: 65,
+  toAge: 85,
+  postRetirementReturn: 4
+};
+
+const initialUserInput4 = {
+  monthlySavings: { stock: 0, mpf: 3000, other: 0, extra: 11708.9651157578 },
+  existingAssets: { stock: 200000, mpf: 300000, other: 300000, extra: 0 },
+  expectedReturn: { stock: 5, mpf: 5, other: 0.1, extra: 5 }
+};
+
 const App = () => {
   const tableData3 =[];
   const tableData4 =[];
   const chartData =[];
+  
+ // Initialize state from localStorage or defaults
+ const [userInput3, setUserInput3] = useState(() => {
+  const saved = localStorage.getItem('userInput3');
+  return saved ? JSON.parse(saved) : initialUserInput3;
+});
 
+const [userInput4, setUserInput4] = useState(() => {
+  const saved = localStorage.getItem('userInput4');
+  return saved ? JSON.parse(saved) : initialUserInput4;
+});
+
+// Persist state changes to localStorage
+useEffect(() => {
+  localStorage.setItem('userInput3', JSON.stringify(userInput3));
+}, [userInput3]);
+
+useEffect(() => {
+  localStorage.setItem('userInput4', JSON.stringify(userInput4));
+}, [userInput4]);
+
+// Reset handler
+const handleReset = () => {
+  setUserInput3(initialUserInput3);
+  setUserInput4(initialUserInput4);
+};
+const combinedInputs = {
+  ...userInput3,
+  ...userInput4,
+  duration: userInput3.toAge - userInput3.fromAge
+};
+  /*
   // State for UserInput3
   const [userInput3, setUserInput3] = useState({
     retirementGoal: 20000,
@@ -34,7 +81,7 @@ const App = () => {
     ...userInput4,
     duration: userInput3.toAge - userInput3.fromAge
   };
-
+ */
   //console.log('All inputs:', combinedInputs);
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //Calculate the first row of data
@@ -117,7 +164,7 @@ const App = () => {
   row_E[0] = "";
   row_F[0] = "";
   row_G[0] = Math.max(...row_sum);
-  console.log(row_G[0])
+  //console.log(row_G[0])
   tableData3.push({
     // feel free to change the shape of the data pushed to the array!
     year: row_Year3[0],
@@ -225,8 +272,8 @@ const App = () => {
     const G21 = combinedInputs.postRetirementReturn/100;
     const E20 = combinedInputs.fromAge;
     
-    console.log('retirementGoal', G17);
-    console.log('inflationAdjustment', G18);
+    //console.log('retirementGoal', G17);
+    //console.log('inflationAdjustment', G18);
 
     // Combine and process inputs from both forms
     let G24;
@@ -297,6 +344,7 @@ const App = () => {
       `}</style>
       {/*<Header />*/}
       
+      <button className="seek-button" onClick={handleReset}>Reset</button>
       <div className="input-container">
         <UserInput3 
           inputs={userInput3}
