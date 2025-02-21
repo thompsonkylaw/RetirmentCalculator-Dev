@@ -312,6 +312,7 @@ const combinedInputs = {
   };
 
   return (
+    <>
     <div className="main-app">
       <style>{`
         .main-app {
@@ -363,6 +364,7 @@ const combinedInputs = {
       <ResultTable4 data={tableData4}/>
       </div>
     </div>
+    </>
   );
 };
 
