@@ -32,6 +32,23 @@ const ChartComponent = (props) => {
   // Filter data for the highlighted range (currentAge to fromAge - 1)
   const dataInRange = props.data.filter(d => parseFloat(d.name) >= currentAge && parseFloat(d.name) <= fromAge - 1);
 
+  const formatNumber = (num) => {
+    if (num === null || num === undefined) return '';
+    const absNum = Math.abs(num);
+
+    if (absNum >= 1000000) {
+      const kValue = Math.round(absNum / 1000000);
+      return `${num < 0 ? '-' : ''}${kValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}M`;
+    }else
+    if (absNum >= 1000) {
+      const kValue = Math.round(absNum / 1000);
+      return `${num < 0 ? '-' : ''}${kValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}K`;
+
+    }
+    return num.toString();
+
+  }
+
   return (
     <Card
       ref={containerRef}
@@ -76,7 +93,8 @@ const ChartComponent = (props) => {
             position: 'left',
             offset: 10,
           }}
-          tickFormatter={(value) => `$${value.toLocaleString()}`}
+          //tickFormatter={(value) => `$${value.toLocaleString()}`}
+          tickFormatter={(value) => formatNumber(value)}
           tick={{ fill: '#666' }}
         />
         <Tooltip

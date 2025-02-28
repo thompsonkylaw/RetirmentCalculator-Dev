@@ -98,7 +98,7 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
         }
       `}</style>
 
-      <h2>退休計劃</h2>
+      <h2>Retirement Plan</h2>
       <div className="form-grid">
         <label className="form-label">Monthly Income Goal</label>
         <input
@@ -115,10 +115,10 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
 
         <label className="form-label">Inflation Adjustment</label>
         <input
-          type="number"
+          type="text"
           className="form-input"
-          value={inputs.inflationAdjustment}
-          onChange={(e) => setInputs({ ...inputs, inflationAdjustment: e.target.value })}
+          value={`${inputs.inflationAdjustment}%`}
+          onChange={(e) => setInputs({ ...inputs, inflationAdjustment: parseCurrency(e.target.value) })}
         />
         <div className="spacer" />
 
@@ -155,10 +155,10 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
 
         <label className="form-label">Post-Retirement Return</label>
         <input
-          type="number"
+          type="text"
           className="form-input"
-          value={inputs.postRetirementReturn}
-          onChange={(e) => setInputs({ ...inputs, postRetirementReturn: e.target.value })}
+          value={`${inputs.postRetirementReturn}%`}
+          onChange={(e) => setInputs({ ...inputs, postRetirementReturn: parseCurrency(e.target.value)})}
           step="0.1"
         />
         <div className="spacer" />

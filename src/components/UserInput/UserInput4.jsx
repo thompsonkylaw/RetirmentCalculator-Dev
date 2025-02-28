@@ -95,7 +95,7 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
         }
       `}</style>
 
-      <h2>儲蓄 & 投資</h2>
+      <h2>Saving & Investment</h2>
       <div className="input-grid">
         <div className="grid-spacer" />
         <div className="grid-header">Stock</div>
@@ -134,15 +134,15 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
         {['stock', 'mpf', 'other', 'extra'].map((field) => (
           <input
             key={field}
-            type="number"
+            type="text"
             className="number-input"
             step="1"
-            value={inputs.expectedReturn[field]}
+            value={`${inputs.expectedReturn[field]}%`}
             onChange={(e) => setInputs({
               ...inputs,
               expectedReturn: {
                 ...inputs.expectedReturn,
-                [field]: e.target.value
+                [field]: parseCurrency(e.target.value)
               }
             })}
           />

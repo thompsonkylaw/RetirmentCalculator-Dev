@@ -268,7 +268,7 @@ const App = () => {
               <ArrowBackIcon />
             </IconButton>
             <Typography variant="h6" sx={{ flexGrow: 1 }}>
-              退休計算機
+              Retirement Calculator
             </Typography>
           </Toolbar>
         </AppBar>
@@ -317,14 +317,14 @@ const App = () => {
             toAge={userInput3.toAge}
           />
           {/* Result Tables */}
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <ResultTable3 data={tableData3} />
-            </Grid>
+          {/* <Grid container spacing={1}>
             <Grid item xs={12} md={6}>
               <ResultTable4 data={tableData4} />
             </Grid>
-          </Grid>
+            <Grid item xs={12} md={6}>
+              <ResultTable3 data={tableData3} />
+            </Grid>
+          </Grid> */}
           {/* Reset Button */}
           <button className="seek-button" onClick={handleReset}>
             Reset
