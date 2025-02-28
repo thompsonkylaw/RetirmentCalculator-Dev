@@ -14,6 +14,7 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import {
   Home as HomeIcon,
   Assessment as AssessmentIcon,
@@ -79,7 +80,7 @@ const App = () => {
     duration: userInput3.toAge - userInput3.fromAge,
   };
 
-  // Calculate the first row of data
+  // Calculate tableData4 (pre-retirement growth)
   let row_Year = [];
   let row_Age = [];
   let row_Stock = [];
@@ -109,9 +110,8 @@ const App = () => {
     sum: row_sum[0],
   });
 
-  // Calculate the rest of the rows of data
-  const numOfWrokingYear = combinedInputs.fromAge - combinedInputs.currentAge;
-  for (let i = 1; i < numOfWrokingYear; i++) {
+  const numOfWorkingYears = combinedInputs.fromAge - combinedInputs.currentAge;
+  for (let i = 1; i < numOfWorkingYears; i++) {
     row_Year[i] = row_Year[i - 1] + 1;
     row_Age[i] = row_Age[i - 1] + 1;
     row_Stock[i] = calculateValue(combinedInputs.expectedReturn.stock, combinedInputs.monthlySavings.stock, row_Stock[i - 1]);
@@ -134,7 +134,7 @@ const App = () => {
     });
   }
 
-  // Calculations for tableData3
+  // Calculate tableData3 (post-retirement drawdown)
   let row_Year3 = [];
   let row_Age3 = [];
   let row_D = [];
@@ -202,7 +202,7 @@ const App = () => {
     });
   }
 
-  // Calculation functions
+  // Calculation functions for seek functionality
   const calculateLeftSeek = (G24) => {
     let G17;
     const G18 = combinedInputs.inflationAdjustment / 100;
@@ -280,65 +280,62 @@ const App = () => {
               padding: 20px;
               font-family: 'Segoe UI', sans-serif;
             }
-            
-            .input-container {
-              display: grid;
-              grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
-              gap: 30px;
-              margin: 2rem 0;
-            }
-            
             .result td {
               font-size: 18px;
               padding: 0px;
               text-align: center;
             }
-
-            @media (max-width: 768px) {
-              .input-container {
-                grid-template-columns: 1fr;
-              }
-            }
           `}</style>
-          {/* <Header /> */}
-          
-          <div className="input-container">
-            <UserInput3
-              inputs={userInput3}
-              setInputs={setUserInput3}
-              onCalculate={() => calculateLeftSeek(row_G[0])}
-            />
-            <UserInput4
-              inputs={userInput4}
-              setInputs={setUserInput4}
-              onCalculate={() =>
-                calculateRightSeek(
-                  row_Stock[row_Stock.length - 1],
-                  row_MPF[row_MPF.length - 1],
-                  row_Other[row_Other.length - 1]
-                )
-              }
-            />
-          </div>
+          {/* User Inputs */}
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <UserInput3
+                inputs={userInput3}
+                setInputs={setUserInput3}
+                onCalculate={() => calculateLeftSeek(row_G[0])}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <UserInput4
+                inputs={userInput4}
+                setInputs={setUserInput4}
+                onCalculate={() =>
+                  calculateRightSeek(
+                    row_Stock[row_Stock.length - 1],
+                    row_MPF[row_MPF.length - 1],
+                    row_Other[row_Other.length - 1]
+                  )
+                }
+              />
+            </Grid>
+          </Grid>
+          {/* Chart */}
           <Chart
-              data={chartData}
-              currentAge={userInput3.currentAge}    
-              fromAge={userInput3.fromAge}    
-              toAge={userInput3.toAge}    
+            data={chartData}
+            currentAge={userInput3.currentAge}
+            fromAge={userInput3.fromAge}
+            toAge={userInput3.toAge}
           />
-          <div className="input-container">
-            <ResultTable3 data={tableData3} />
-            <ResultTable4 data={tableData4} />
-          </div>
-        </div>
-        <button className="seek-button" onClick={handleReset}>
+          {/* Result Tables */}
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <ResultTable3 data={tableData3} />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <ResultTable4 data={tableData4} />
+            </Grid>
+          </Grid>
+          {/* Reset Button */}
+          <button className="seek-button" onClick={handleReset}>
             Reset
           </button>
+        </div>
       </Box>
     </ThemeProvider>
   );
 };
 
+// Helper function to calculate future value
 function calculateValue(expectedReturn, monthlySaving, existingAsset) {
   const rate = expectedReturn / 100 / 12;
   const nper = 12;
