@@ -277,7 +277,7 @@ const App = () => {
             .main-app {
               max-width: 1600px;
               margin: 0 auto;
-              padding: 20px;
+              padding: 10px;
               font-family: 'Segoe UI', sans-serif;
             }
             .result td {
@@ -287,7 +287,7 @@ const App = () => {
             }
           `}</style>
           {/* User Inputs */}
-          <Grid container spacing={3}>
+          <Grid container spacing={1}>
             <Grid item xs={12} md={6}>
               <UserInput3
                 inputs={userInput3}

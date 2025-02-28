@@ -57,7 +57,7 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
           border: 2px solid #2c3e50;
           border-radius: 6px;
           text-align: center;
-          font-size: 1rem;
+          font-size: 0.8rem;
         }
 
         .seek-button {
