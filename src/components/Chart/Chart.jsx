@@ -39,8 +39,11 @@ const ChartComponent = (props) => {
         width: '100%',
         height: '400px',
         margin: '20px 0',
+        borderRadius: '10px',
+        boxShadow: '0 2px 15px rgba(0,0,0,0.1)',
       }}
     >
+      
       <AreaChart
         width={dimensions.width}
         height={dimensions.height}

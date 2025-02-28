@@ -1,3 +1,6 @@
+import React from 'react';
+import Card from '@mui/material/Card';
+
 const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
   // Formatting function
   const formatCurrency = (value) => `$${parseInt(value).toLocaleString('en-US')}`;
@@ -5,7 +8,6 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
 
   // Handlers
   const handleCurrencyChange = (category, field, value) => {
-   //const parsedValue = parseCurrency(value);
     setInputs({
       ...inputs,
       [category]: {
@@ -16,15 +18,15 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
   };
 
   return (
-    <div className="form-container">
+    <Card
+      sx={{
+        background: '#fff',
+        padding: '2rem',
+        borderRadius: '10px',
+        boxShadow: '0 2px 15px rgba(0,0,0,0.1)',
+      }}
+    >
       <style>{`
-        .form-container {
-          background: #fff;
-          padding: 2rem;
-          border-radius: 10px;
-          box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-        }
-
         .input-grid {
           display: grid;
           grid-template-columns: 1fr repeat(4, 120px) 100px;
@@ -98,13 +100,13 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
         <div className="grid-label">Monthly Savings</div>
         {['stock', 'mpf', 'other', 'extra'].map((field) => (
           <input
-          key={field}
-          type="number"
-          className="currency-input"
-          step="any"  // Allow any decimal value
-          value={inputs.monthlySavings[field]}
-          onChange={(e) => handleCurrencyChange('monthlySavings', field, e.target.value)}
-          inputMode="decimal"  // Better mobile keyboard
+            key={field}
+            type="number"
+            className="currency-input"
+            step="any"  // Allow any decimal value
+            value={inputs.monthlySavings[field]}
+            onChange={(e) => handleCurrencyChange('monthlySavings', field, e.target.value)}
+            inputMode="decimal"  // Better mobile keyboard
           />
         ))}
         <button className="seek-button" onClick={onCalculate}>Seek</button>
@@ -115,7 +117,6 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
             key={field}
             type="number"
             className="currency-input"
-            //value={formatCurrency(inputs.existingAssets[field])}
             value={inputs.existingAssets[field]}
             onChange={(e) => handleCurrencyChange('existingAssets', field, e.target.value)}
           />
@@ -141,7 +142,7 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
         ))}
         <div className="grid-spacer" />
       </div>
-    </div>
+    </Card>
   );
 };
 
