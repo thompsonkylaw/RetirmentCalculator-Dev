@@ -3,9 +3,11 @@ import Card from '@mui/material/Card';
 
 const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
   const formatCurrency = (value) => `$${parseInt(value).toLocaleString('en-US')}`;
-  const parseCurrency = (value) => value.replace(/[^0-9]/g, '');
+  //const parseCurrency = (value) => value.replace(/[^0-9]/g, '');
+  const parseCurrency = (value) => parseInt(value.replace(/\D/g, ''), 10) || 0;
 
   const handleCurrencyChange = (category, field, value) => {
+    value = parseCurrency(value);
     setInputs({
       ...inputs,
       [category]: {
@@ -19,17 +21,17 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
     <Card
       sx={{
         background: '#fff',
-        padding: '0.5rem',
+        padding: '0.4rem',
         borderRadius: '10px',
         boxShadow: '0 2px 15px rgba(0,0,0,0.1)',
-        height: 330,
+        height: 310,
       }}
     >
       <style>{`
         .input-grid {
           display: grid;
           grid-template-columns: 1fr repeat(4, 1fr) auto; /* Flexible columns */
-          gap: 0.2rem;
+          gap: 0.1rem;
           align-items: center;
         }
 
@@ -45,13 +47,13 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
         .grid-label {
           font-weight: 600;
           color: #2c3e50;
-          padding: 0.4rem;
+          padding: 0.3rem;
           text-align: right;
         }
 
         .currency-input, .number-input {
           width: 100%;
-          padding: 0.8rem;
+          padding: 0.6rem;
           border: 2px solid #2c3e50;
           border-radius: 6px;
           text-align: center;
@@ -106,10 +108,10 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
         {['stock', 'mpf', 'other', 'extra'].map((field) => (
           <input
             key={field}
-            type="number"
+            type="text"
             className="currency-input"
             step="any"
-            value={inputs.monthlySavings[field]}
+            value={formatCurrency(inputs.monthlySavings[field])}
             onChange={(e) => handleCurrencyChange('monthlySavings', field, e.target.value)}
             inputMode="decimal"
           />
@@ -120,9 +122,9 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
         {['stock', 'mpf', 'other', 'extra'].map((field) => (
           <input
             key={field}
-            type="number"
+            type="text"
             className="currency-input"
-            value={inputs.existingAssets[field]}
+            value={formatCurrency(inputs.existingAssets[field])}
             onChange={(e) => handleCurrencyChange('existingAssets', field, e.target.value)}
           />
         ))}

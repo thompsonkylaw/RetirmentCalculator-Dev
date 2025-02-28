@@ -257,7 +257,7 @@ const App = () => {
       <CssBaseline />
       <Box
         sx={{
-          p: { xs: 1, md: 3 },
+          p: { xs: 1, md: 0 },
           minHeight: '100vh',
           backgroundColor: 'background.default',
         }}

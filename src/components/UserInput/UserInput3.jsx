@@ -3,9 +3,9 @@ import Card from '@mui/material/Card';
 
 const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
   // Formatting functions
-  const formatCurrency = (value) => `$${parseInt(value).toLocaleString('en-US')}`;
-  const parseCurrency = (value) => value.replace(/[^0-9]/g, '');
-
+   const formatCurrency = (value) => `$${parseInt(value).toLocaleString('en-US')}`;
+  //const parseCurrency = (value) => value.replace(/[^0-9]/g, '');
+  const parseCurrency = (value) => parseInt(value.replace(/\D/g, ''), 10) || 0;
   // Handlers
   const handleRetirementGoal = (e) => {
     const rawValue = parseCurrency(e.target.value);
@@ -16,6 +16,14 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
     setInputs({ ...inputs, [field]: value.toString() });
   };
 
+  // const formatCurrency = (value) => {
+  //   const convertedValue = currencySwitch ? value * 7.8 : value;
+  //   return new Intl.NumberFormat('en-US', {
+  //     style: 'currency',
+  //     currency: currencySwitch ? 'HKD' : 'USD',
+  //     maximumFractionDigits: 0,
+  //   }).format(isNaN(convertedValue) ? 0 : convertedValue);
+  // };
   return (
     <Card
       sx={{
@@ -23,7 +31,7 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
         padding: '1rem',
         borderRadius: '10px',
         boxShadow: '0 2px 15px rgba(0,0,0,0.1)',
-        height: 330,
+        height: 310,
       }}
     >
       <style>{`
@@ -94,9 +102,9 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
       <div className="form-grid">
         <label className="form-label">Monthly Income Goal</label>
         <input
-          type="number"
+          type="text"
           className="form-input"
-          value={inputs.retirementGoal}
+          value={formatCurrency(inputs.retirementGoal)}
           onChange={handleRetirementGoal}
           onBlur={() => setInputs({ ...inputs, retirementGoal: inputs.retirementGoal || 0 })}
           step={0.01}
