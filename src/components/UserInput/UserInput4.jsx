@@ -30,7 +30,7 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
         .input-grid {
           display: grid;
           grid-template-columns: 1fr repeat(4, minmax(120px, 1fr)) auto;
-          gap: 1rem;
+          gap: 0.2rem;
           align-items: center;
         }
 
@@ -46,7 +46,7 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
         .grid-label {
           font-weight: 600;
           color: #2c3e50;
-          padding: 0.8rem;
+          padding: 0.4rem;
           text-align: right;
         }
 

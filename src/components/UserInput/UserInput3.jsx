@@ -29,7 +29,7 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
         .form-grid {
           display: grid;
           grid-template-columns: 1fr 1fr auto;
-          gap: 1rem;
+          gap: 0.1 rem;
           align-items: center;
         }
 
@@ -42,7 +42,7 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
 
         .form-input {
           width: 100%;
-          padding: 0.8rem;
+          padding: 0.6rem;
           border: 1px solid #1976d2;
           border-radius: 6px;
           font-size: 1rem;
