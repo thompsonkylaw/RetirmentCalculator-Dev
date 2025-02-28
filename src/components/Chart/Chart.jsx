@@ -1,7 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine, Line } from 'recharts';
+import Card from '@mui/material/Card';
 
 const ChartComponent = (props) => {
+  let { data, currentAge, fromAge, toAge } = props;
   const containerRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
@@ -10,7 +12,7 @@ const ChartComponent = (props) => {
       if (containerRef.current) {
         setDimensions({
           width: containerRef.current.offsetWidth,
-          height: containerRef.current.offsetHeight
+          height: containerRef.current.offsetHeight,
         });
       }
     };
@@ -21,62 +23,101 @@ const ChartComponent = (props) => {
     return () => window.removeEventListener('resize', updateDimensions);
   }, []);
 
+  // Define the specific ages to show on the X-axis
+  const specificAges = [currentAge, fromAge - 1, toAge];
+
+  // Define toAge as fromAge for clarity
+  toAge = fromAge;
+
+  // Filter data for the highlighted range (currentAge to fromAge - 1)
+  const dataInRange = props.data.filter(d => parseFloat(d.name) >= currentAge && parseFloat(d.name) <= fromAge - 1);
+
   return (
-    <div 
+    <Card
       ref={containerRef}
-      style={{ 
-        width: '100%', 
-        height: '400px', 
+      sx={{
+        width: '100%',
+        height: '400px',
         margin: '20px 0',
-        display: 'flex'
       }}
     >
-      <LineChart
+      <AreaChart
         width={dimensions.width}
         height={dimensions.height}
         data={props.data}
         margin={{ top: 20, right: 30, left: 30, bottom: 20 }}
       >
-        {/* Keep all your existing chart components here */}
+        <defs>
+          <linearGradient id="gradientFillFirst" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="#84D89CFF" stopOpacity={.8} />
+            <stop offset="100%" stopColor="#84D89CFF" stopOpacity={0} />
+          </linearGradient>
+          <linearGradient id="gradientFillSecond" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="#CA828EFF" stopOpacity={0.8} />
+            <stop offset="100%" stopColor="#CA828EFF" stopOpacity={0} />
+          </linearGradient>
+        </defs>
         <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
-        <XAxis 
-          dataKey="name" 
+        <XAxis
+          dataKey="name"
+          type="number"
+          domain={[currentAge, toAge]}
+          ticks={specificAges}
           label={{ value: 'Age', position: 'bottom', offset: 0 }}
           tick={{ fill: '#667' }}
         />
         <YAxis
-          label={{ 
-            value: 'Amount', 
-            angle: -90, 
+          label={{
+            value: 'Amount',
+            angle: -90,
             position: 'left',
-            offset: 10
+            offset: 10,
           }}
           tickFormatter={(value) => `$${value.toLocaleString()}`}
           tick={{ fill: '#666' }}
         />
-        <Tooltip 
+        <Tooltip
           formatter={(value) => [`$${Number(value).toLocaleString()}`, 'Amount']}
           labelFormatter={(label) => `Age: ${label}`}
         />
-        <Legend 
+        <Legend
           wrapperStyle={{ paddingTop: '20px' }}
           formatter={() => <span style={{ color: '#333' }}>Total Savings</span>}
+        />
+        <Area
+          type="monotone"
+          dataKey="sum"
+          data={props.data}
+          fill="url(#gradientFillSecond)"
+          stroke="none"
+        />
+        <Area
+          type="monotone"
+          dataKey="sum"
+          data={dataInRange}
+          fill="url(#gradientFillFirst)"
+          stroke="none"
         />
         <Line
           type="monotone"
           dataKey="sum"
+          data={props.data}
           stroke="#8884d8"
           strokeWidth={2}
-          dot={{ fill: '#8884d8', strokeWidth: 2 }}
-          activeDot={{ r: 8, fill: '#fff', stroke: '#8884d8' }}
+          dot={false}
         />
-      </LineChart>
-    </div>
+        <ReferenceLine
+          y={0}
+          stroke="#000"
+          strokeWidth={2}
+        />
+      </AreaChart>
+    </Card>
   );
 };
 
 ChartComponent.defaultProps = {
-  chartData: []
+  data: [],
 };
 
 export default ChartComponent;

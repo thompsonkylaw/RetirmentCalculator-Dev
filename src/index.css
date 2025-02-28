@@ -12,7 +12,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* background-color: #242a28; */
-  background: radial-gradient(#303b37, #1a1f1d);
+  //background: radial-gradient(#303b37, #1a1f1d);
   color: #e1eeeb;
 }
 
@@ -118,3 +118,21 @@ button:hover {
   font-size: 0.85rem;
   color: #c2e9e0;
 }
+
+/* Input grid */
+.main-app .input-grid{
+  position:relative;
+  left:-40px;
+ }
+ 
+ /* Input container */
+ .MuiBox-root .main-app .input-container{
+  transform:translatex(0px) translatey(0px);
+ }
+ 
+ /* Form container */
+ .main-app .form-container{
+  padding-top:0px;
+ }
+ 
+ 
