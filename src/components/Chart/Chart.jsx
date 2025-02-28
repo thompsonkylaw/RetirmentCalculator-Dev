@@ -49,8 +49,8 @@ const ChartComponent = (props) => {
       >
         <defs>
           <linearGradient id="gradientFillFirst" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#84D89CFF" stopOpacity={.8} />
-            <stop offset="100%" stopColor="#84D89CFF" stopOpacity={0} />
+            <stop offset="5%" stopColor="#1976d2" stopOpacity={.8} />
+            <stop offset="100%" stopColor="#1976d2" stopOpacity={0} />
           </linearGradient>
           <linearGradient id="gradientFillSecond" x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor="#CA828EFF" stopOpacity={0.8} />
