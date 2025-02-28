@@ -23,6 +23,7 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
         padding: '1rem',
         borderRadius: '10px',
         boxShadow: '0 2px 15px rgba(0,0,0,0.1)',
+        height: 330,
       }}
     >
       <style>{`
@@ -43,7 +44,7 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
         .form-input {
           width: 100%;
           padding: 0.6rem; //space hight
-          border: 1px solid #1976d2;
+          border: 1px solid #219a52;
           border-radius: 6px;
           font-size: 1rem;
           text-align: center;
@@ -52,12 +53,12 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
 
         .form-input:focus {
           outline: none;
-          border-color: #3498db;
+          border-color: #219a52;
           box-shadow: 0 0 0 3px rgba(52,152,219,0.2);
         }
 
         .seek-button {
-          background: #1976d2;
+          background: #219a52;
           color: white;
           border: none;
           padding: 0.8rem 1.5rem;
@@ -69,7 +70,7 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
         }
 
         .seek-button:hover {
-          background: #1976d2;
+          background: #219a52;
           transform: translateY(-1px);
         }
 
@@ -85,7 +86,7 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
 
         .main-app h2 {
           text-align: center;
-          color: #1976d2;
+          color: #219a52;
         }
       `}</style>
 

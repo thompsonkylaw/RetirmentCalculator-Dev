@@ -22,6 +22,7 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
         padding: '0.5rem',
         borderRadius: '10px',
         boxShadow: '0 2px 15px rgba(0,0,0,0.1)',
+        height: 330,
       }}
     >
       <style>{`
@@ -51,7 +52,7 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
         .currency-input, .number-input {
           width: 100%;
           padding: 0.8rem;
-          border: 1px solid #bdc3c7;
+          border: 2px solid #2c3e50;
           border-radius: 6px;
           text-align: center;
           font-size: 1rem;

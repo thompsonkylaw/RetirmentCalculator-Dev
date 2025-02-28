@@ -33,38 +33,9 @@ body {
   font-size: 1.5rem;
 }
 
-.form {
-  padding: 1rem;
-  max-width: 30rem;
-  margin: 2rem auto;
-  border-radius: 4px;
-  background: linear-gradient(180deg, #1976d2, #1976d2);
-}
 
-.input-group {
-  display: flex;
-  justify-content: space-evenly;
-  gap: 1.5rem;
-}
 
-.form label {
-  display: block;
-  margin-bottom: 0.25rem;
-  font-family: 'Roboto Condensed', sans-serif;
-  font-size: 0.5rem;
-  font-weight: bold;
-  text-transform: uppercase;
-}
 
-.form input {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #1976d2;
-  border-radius: 0.25rem;
-  background-color: transparent;
-  color: #1976d2;
-  font-size: 1rem;
-}
 
 .actions {
   display: flex;
@@ -108,7 +79,24 @@ button:hover {
   text-align: right;
 }
 
-
+/* Mui paper elevation */
+.main-app .MuiGrid-item .MuiPaper-elevation{
+  padding-top:0px;
+ }
+ 
+ /* Mui box root */
+ .react-container .MuiBox-root{
+  transform:translatex(0px) translatey(0px);
+ }
+ 
+ @media (min-width:900px){
+ 
+  /* Mui box root */
+  .react-container .MuiBox-root{
+   padding-top:0px;
+  }
+  
+ }
 
 
 
