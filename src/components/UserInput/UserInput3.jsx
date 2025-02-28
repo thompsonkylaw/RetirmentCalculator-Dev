@@ -20,7 +20,7 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
     <Card
       sx={{
         background: '#fff',
-        padding: '2rem',
+        padding: '1rem',
         borderRadius: '10px',
         boxShadow: '0 2px 15px rgba(0,0,0,0.1)',
       }}
@@ -36,13 +36,13 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
         .form-label {
           font-weight: 600;
           color: #2c3e50;
-          padding: 0.8rem;
+          padding: 0.7rem;
           font-size: 0.95rem;
         }
 
         .form-input {
           width: 100%;
-          padding: 0.6rem;
+          padding: 0.6rem; //space hight
           border: 1px solid #1976d2;
           border-radius: 6px;
           font-size: 1rem;
