@@ -31,7 +31,7 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
         padding: '1rem',
         borderRadius: '10px',
         boxShadow: '0 2px 15px rgba(0,0,0,0.1)',
-        height: 310,
+        minHeight: 310,
       }}
     >
       <style>{`
