@@ -2,11 +2,9 @@ import React from 'react';
 import Card from '@mui/material/Card';
 
 const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
-  // Formatting function
   const formatCurrency = (value) => `$${parseInt(value).toLocaleString('en-US')}`;
   const parseCurrency = (value) => value.replace(/[^0-9]/g, '');
 
-  // Handlers
   const handleCurrencyChange = (category, field, value) => {
     setInputs({
       ...inputs,
@@ -21,7 +19,7 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
     <Card
       sx={{
         background: '#fff',
-        padding: '2rem',
+        padding: '0.5rem',
         borderRadius: '10px',
         boxShadow: '0 2px 15px rgba(0,0,0,0.1)',
       }}
@@ -29,7 +27,7 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
       <style>{`
         .input-grid {
           display: grid;
-          grid-template-columns: 1fr repeat(4, minmax(120px, 1fr)) auto;
+          grid-template-columns: 1fr repeat(4, 1fr) auto; /* Flexible columns */
           gap: 0.2rem;
           align-items: center;
         }
@@ -78,19 +76,18 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
           width: 100px;
         }
 
-        /* Responsive adjustments for smaller screens */
-        @media (max-width: 768px) {
+        @media (max-width: 600px) {
           .input-grid {
-            grid-template-columns: 1fr; /* Stack elements vertically */
+            grid-template-columns: 1fr; /* Stack vertically */
           }
 
           .grid-label, .grid-header, .currency-input, .number-input, .seek-button {
-            grid-column: 1 / -1; /* Full width for each element */
+            grid-column: 1 / -1; /* Full width */
             text-align: center;
           }
 
           .grid-spacer {
-            display: none; /* Hide spacers on small screens */
+            display: none; /* Hide spacers */
           }
         }
       `}</style>

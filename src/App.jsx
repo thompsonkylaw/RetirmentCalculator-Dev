@@ -262,7 +262,7 @@ const App = () => {
           backgroundColor: 'background.default',
         }}
       >
-        <AppBar position="static" sx={{ backgroundColor: '#1976d2' }}>
+        <AppBar position="static" sx={{ backgroundColor: '#219a52' }}>
           <Toolbar>
             <IconButton edge="start" color="inherit" aria-label="back">
               <ArrowBackIcon />
