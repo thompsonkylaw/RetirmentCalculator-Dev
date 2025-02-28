@@ -29,7 +29,7 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
       <style>{`
         .input-grid {
           display: grid;
-          grid-template-columns: 1fr repeat(4, 120px) 100px;
+          grid-template-columns: 1fr repeat(4, minmax(120px, 1fr)) auto;
           gap: 1rem;
           align-items: center;
         }
@@ -50,16 +50,7 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
           text-align: right;
         }
 
-        .currency-input {
-          width: 100%;
-          padding: 0.8rem;
-          border: 1px solid #bdc3c7;
-          border-radius: 6px;
-          text-align: center;
-          font-size: 1rem;
-        }
-
-        .number-input {
+        .currency-input, .number-input {
           width: 100%;
           padding: 0.8rem;
           border: 1px solid #bdc3c7;
@@ -86,6 +77,22 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
         .grid-spacer {
           width: 100px;
         }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 768px) {
+          .input-grid {
+            grid-template-columns: 1fr; /* Stack elements vertically */
+          }
+
+          .grid-label, .grid-header, .currency-input, .number-input, .seek-button {
+            grid-column: 1 / -1; /* Full width for each element */
+            text-align: center;
+          }
+
+          .grid-spacer {
+            display: none; /* Hide spacers on small screens */
+          }
+        }
       `}</style>
 
       <h2>儲蓄 & 投資</h2>
@@ -103,10 +110,10 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
             key={field}
             type="number"
             className="currency-input"
-            step="any"  // Allow any decimal value
+            step="any"
             value={inputs.monthlySavings[field]}
             onChange={(e) => handleCurrencyChange('monthlySavings', field, e.target.value)}
-            inputMode="decimal"  // Better mobile keyboard
+            inputMode="decimal"
           />
         ))}
         <button className="seek-button" onClick={onCalculate}>Seek</button>

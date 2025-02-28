@@ -114,6 +114,19 @@ button:hover {
   position:relative;
   left:-40px;
  }
+
+ @media (max-width: 768px) {
+  .input-grid {
+    grid-template-columns: 1fr; /* Stack everything in one column */
+  }
+  .grid-label, .grid-header, .currency-input, .number-input, .seek-button {
+    grid-column: 1 / -1; /* Span the full width */
+    text-align: center;
+  }
+  .grid-spacer {
+    display: none; /* Remove spacers */
+  }
+}
  
 
  
