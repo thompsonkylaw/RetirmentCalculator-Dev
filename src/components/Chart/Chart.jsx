@@ -69,12 +69,12 @@ const ChartComponent = (props) => {
       >
         <defs>
           <linearGradient id="gradientFillFirst" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#1976d2" stopOpacity={.8} />
-            <stop offset="100%" stopColor="#1976d2" stopOpacity={0} />
+            <stop offset="5%" stopColor="#1976d2" stopOpacity={1} />
+            <stop offset="100%" stopColor="#1976d2" stopOpacity={0.5} />
           </linearGradient>
           <linearGradient id="gradientFillSecond" x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor="#CA828EFF" stopOpacity={0.8} />
-            <stop offset="100%" stopColor="#CA828EFF" stopOpacity={0} />
+            <stop offset="100%" stopColor="#CA828EFF" stopOpacity={0.5} />
           </linearGradient>
         </defs>
         <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
@@ -101,10 +101,10 @@ const ChartComponent = (props) => {
           formatter={(value) => [`$${Number(value).toLocaleString()}`, 'Amount']}
           labelFormatter={(label) => `Age: ${label}`}
         />
-        <Legend
+        {/* <Legend
           wrapperStyle={{ paddingTop: '20px' }}
           formatter={() => <span style={{ color: '#333' }}>Total Savings</span>}
-        />
+        /> */}
         <Area
           type="monotone"
           dataKey="sum"

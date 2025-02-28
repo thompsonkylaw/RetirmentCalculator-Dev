@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useReducer, useEffect } from 'react';
 import Header from "./components/Header/Header";
 import UserInput3 from "./components/UserInput/UserInput3";
 import UserInput4 from "./components/UserInput/UserInput4";
@@ -27,7 +27,7 @@ import {
 // Define the theme for Material-UI
 const theme = createTheme();
 
-// Initial state constants
+// Initial state constants for user inputs
 const initialUserInput3 = {
   retirementGoal: 20000,
   inflationAdjustment: 4,
@@ -43,44 +43,112 @@ const initialUserInput4 = {
   expectedReturn: { stock: 5, mpf: 5, other: 0.1, extra: 5 },
 };
 
+// Initial state for the reducer, loading from localStorage if available
+const initialState = {
+  current: {
+    userInput3: JSON.parse(localStorage.getItem('userInput3')) || initialUserInput3,
+    userInput4: JSON.parse(localStorage.getItem('userInput4')) || initialUserInput4,
+  },
+  history: [],
+  future: [],
+};
+
+// Reducer function to manage state with undo/redo
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'UPDATE_INPUT3':
+      return {
+        ...state,
+        history: [...state.history, state.current],
+        current: {
+          ...state.current,
+          userInput3: action.payload,
+        },
+        future: [],
+      };
+    case 'UPDATE_INPUT4':
+      return {
+        ...state,
+        history: [...state.history, state.current],
+        current: {
+          ...state.current,
+          userInput4: action.payload,
+        },
+        future: [],
+      };
+    case 'UNDO':
+      if (state.history.length === 0) return state;
+      const previous = state.history[state.history.length - 1];
+      const newHistory = state.history.slice(0, -1);
+      return {
+        current: previous,
+        history: newHistory,
+        future: [state.current, ...state.future],
+      };
+    case 'REDO':
+      if (state.future.length === 0) return state;
+      const next = state.future[0];
+      const newFuture = state.future.slice(1);
+      return {
+        current: next,
+        history: [...state.history, state.current],
+        future: newFuture,
+      };
+    case 'RESET':
+      return {
+        current: {
+          userInput3: initialUserInput3,
+          userInput4: initialUserInput4,
+        },
+        history: [],
+        future: [],
+      };
+    default:
+      return state;
+  }
+};
+
 const App = () => {
-  const tableData3 = [];
-  const tableData4 = [];
-  const chartData = [];
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  // Initialize state from localStorage or defaults
-  const [userInput3, setUserInput3] = useState(() => {
-    const saved = localStorage.getItem('userInput3');
-    return saved ? JSON.parse(saved) : initialUserInput3;
-  });
-
-  const [userInput4, setUserInput4] = useState(() => {
-    const saved = localStorage.getItem('userInput4');
-    return saved ? JSON.parse(saved) : initialUserInput4;
-  });
-
-  // Persist state changes to localStorage
-  useEffect(() => {
-    localStorage.setItem('userInput3', JSON.stringify(userInput3));
-  }, [userInput3]);
-
-  useEffect(() => {
-    localStorage.setItem('userInput4', JSON.stringify(userInput4));
-  }, [userInput4]);
-
-  // Reset handler
-  const handleReset = () => {
-    setUserInput3(initialUserInput3);
-    setUserInput4(initialUserInput4);
+  // Functions to update inputs via dispatch
+  const updateUserInput3 = (newInput3) => {
+    dispatch({ type: 'UPDATE_INPUT3', payload: newInput3 });
   };
 
+  const updateUserInput4 = (newInput4) => {
+    dispatch({ type: 'UPDATE_INPUT4', payload: newInput4 });
+  };
+
+  // Button handlers
+  const handleUndo = () => {
+    dispatch({ type: 'UNDO' });
+  };
+
+  const handleRedo = () => {
+    dispatch({ type: 'REDO' });
+  };
+
+  const handleReset = () => {
+    dispatch({ type: 'RESET' });
+  };
+
+  // Persist current state to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('userInput3', JSON.stringify(state.current.userInput3));
+    localStorage.setItem('userInput4', JSON.stringify(state.current.userInput4));
+  }, [state.current]);
+
+  // Combined inputs for calculations
   const combinedInputs = {
-    ...userInput3,
-    ...userInput4,
-    duration: userInput3.toAge - userInput3.fromAge,
+    ...state.current.userInput3,
+    ...state.current.userInput4,
+    duration: state.current.userInput3.toAge - state.current.userInput3.fromAge,
   };
 
   // Calculate tableData4 (pre-retirement growth)
+  const tableData4 = [];
+  const chartData = [];
   let row_Year = [];
   let row_Age = [];
   let row_Stock = [];
@@ -135,6 +203,7 @@ const App = () => {
   }
 
   // Calculate tableData3 (post-retirement drawdown)
+  const tableData3 = [];
   let row_Year3 = [];
   let row_Age3 = [];
   let row_D = [];
@@ -202,36 +271,36 @@ const App = () => {
     });
   }
 
-  // Calculation functions for seek functionality
+  // Seek calculation functions
   const calculateLeftSeek = (G24) => {
     let G17;
-    const G18 = combinedInputs.inflationAdjustment / 100;
-    const G19 = combinedInputs.currentAge;
-    const G20 = combinedInputs.toAge;
-    const G21 = combinedInputs.postRetirementReturn / 100;
-    const E20 = combinedInputs.fromAge;
+    const G18 = state.current.userInput3.inflationAdjustment / 100;
+    const G19 = state.current.userInput3.currentAge;
+    const G20 = state.current.userInput3.toAge;
+    const G21 = state.current.userInput3.postRetirementReturn / 100;
+    const E20 = state.current.userInput3.fromAge;
 
     if (G21 === G18) {
       G17 = G24 / ((G20 - E20 + 1) * 12 * Math.pow(1 + G18, E20 - G19));
     } else {
       G17 = (G24 * (G21 - G18)) / ((1 - Math.pow((1 + G18) / (1 + G21), G20 - E20 + 1)) * 12 * Math.pow(1 + G18, E20 - G19) * (1 + G21));
     }
-    setUserInput3((prev) => ({
-      ...prev,
+    updateUserInput3({
+      ...state.current.userInput3,
       retirementGoal: G17,
-    }));
+    });
   };
 
   const calculateRightSeek = (lastRowOfStock, lastRowOfMPF, lastRowOfOther) => {
     let P18;
-    const P19 = combinedInputs.existingAssets.extra;
-    const P20 = combinedInputs.expectedReturn.extra / 100;
-    const G17 = combinedInputs.retirementGoal;
-    const G18 = combinedInputs.inflationAdjustment / 100;
-    const G19 = combinedInputs.currentAge;
-    const G20 = combinedInputs.toAge;
-    const G21 = combinedInputs.postRetirementReturn / 100;
-    const E20 = combinedInputs.fromAge;
+    const P19 = state.current.userInput4.existingAssets.extra;
+    const P20 = state.current.userInput4.expectedReturn.extra / 100;
+    const G17 = state.current.userInput3.retirementGoal;
+    const G18 = state.current.userInput3.inflationAdjustment / 100;
+    const G19 = state.current.userInput3.currentAge;
+    const G20 = state.current.userInput3.toAge;
+    const G21 = state.current.userInput3.postRetirementReturn / 100;
+    const E20 = state.current.userInput3.fromAge;
 
     let G24;
     if (G21 === G18) {
@@ -243,13 +312,13 @@ const App = () => {
     const lastRowOfExtra = G24 - lastRowOfStock - lastRowOfMPF - lastRowOfOther;
     P18 = (lastRowOfExtra - P19 * (1 + P20 / 12) ** (12 * (E20 - G19))) * (P20 / 12) / ((1 + P20 / 12) ** (12 * (E20 - G19)) - 1);
 
-    setUserInput4((prev) => ({
-      ...prev,
+    updateUserInput4({
+      ...state.current.userInput4,
       monthlySavings: {
-        ...prev.monthlySavings,
+        ...state.current.userInput4.monthlySavings,
         extra: P18,
       },
-    }));
+    });
   };
 
   return (
@@ -285,20 +354,26 @@ const App = () => {
               padding: 0px;
               text-align: center;
             }
+            .seek-button {
+              margin: 5px;
+              padding: 10px 20px;
+              font-size: 16px;
+              cursor: pointer;
+            }
           `}</style>
           {/* User Inputs */}
           <Grid container spacing={1}>
             <Grid item xs={12} md={6}>
               <UserInput3
-                inputs={userInput3}
-                setInputs={setUserInput3}
+                inputs={state.current.userInput3}
+                setInputs={updateUserInput3}
                 onCalculate={() => calculateLeftSeek(row_G[0])}
               />
             </Grid>
             <Grid item xs={12} md={6}>
               <UserInput4
-                inputs={userInput4}
-                setInputs={setUserInput4}
+                inputs={state.current.userInput4}
+                setInputs={updateUserInput4}
                 onCalculate={() =>
                   calculateRightSeek(
                     row_Stock[row_Stock.length - 1],
@@ -312,11 +387,11 @@ const App = () => {
           {/* Chart */}
           <Chart
             data={chartData}
-            currentAge={userInput3.currentAge}
-            fromAge={userInput3.fromAge}
-            toAge={userInput3.toAge}
+            currentAge={state.current.userInput3.currentAge}
+            fromAge={state.current.userInput3.fromAge}
+            toAge={state.current.userInput3.toAge}
           />
-          {/* Result Tables */}
+          {/* Result Tables (commented out) */}
           {/* <Grid container spacing={1}>
             <Grid item xs={12} md={6}>
               <ResultTable4 data={tableData4} />
@@ -325,9 +400,15 @@ const App = () => {
               <ResultTable3 data={tableData3} />
             </Grid>
           </Grid> */}
-          {/* Reset Button */}
+          {/* Action Buttons */}
           <button className="seek-button" onClick={handleReset}>
             Reset
+          </button>
+          <button className="seek-button" onClick={handleUndo}>
+            Undo
+          </button>
+          <button className="seek-button" onClick={handleRedo}>
+            Redo
           </button>
         </div>
       </Box>
