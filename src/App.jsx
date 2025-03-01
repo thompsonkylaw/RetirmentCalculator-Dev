@@ -1,12 +1,4 @@
 import { useReducer, useEffect } from 'react';
-import Header from "./components/Header/Header";
-import UserInput3 from "./components/UserInput/UserInput3";
-import UserInput4 from "./components/UserInput/UserInput4";
-import ResultTable3 from "./components/ResultTable/ResultTable3";
-import ResultTable4 from "./components/ResultTable/ResultTable4";
-import Chart from './components/Chart/Chart';
-
-// Material-UI imports
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import AppBar from '@mui/material/AppBar';
@@ -15,19 +7,15 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import {
-  Home as HomeIcon,
-  Assessment as AssessmentIcon,
-  People as PeopleIcon,
-  Settings as SettingsIcon,
-  Help as HelpIcon,
-  ArrowBack as ArrowBackIcon,
-} from '@mui/icons-material';
+import Button from '@mui/material/Button';
+import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
+import UserInput3 from './components/UserInput/UserInput3';
+import UserInput4 from './components/UserInput/UserInput4';
+import Chart from './components/Chart/Chart';
+import LanguageSwitcher from './components/UserInput/LanguageSwitcher';
 
-// Define the theme for Material-UI
 const theme = createTheme();
 
-// Initial state constants for user inputs
 const initialUserInput3 = {
   retirementGoal: 20000,
   inflationAdjustment: 4,
@@ -43,65 +31,112 @@ const initialUserInput4 = {
   expectedReturn: { stock: 5, mpf: 5, other: 0.1, extra: 5 },
 };
 
-// Initial state for the reducer, loading from localStorage if available
-const initialState = {
-  current: {
-    userInput3: JSON.parse(localStorage.getItem('userInput3')) || initialUserInput3,
-    userInput4: JSON.parse(localStorage.getItem('userInput4')) || initialUserInput4,
-  },
-  history: [],
-  future: [],
+const initialUserInput = {
+  userInput3: initialUserInput3,
+  userInput4: initialUserInput4,
 };
 
-// Reducer function to manage state with undo/redo
+const savedVersionsCurrent = JSON.parse(localStorage.getItem('versionsCurrent')) || {
+  ver1: initialUserInput,
+  ver2: initialUserInput,
+  ver3: initialUserInput,
+  ver4: initialUserInput,
+};
+
+const initialState = {
+  versions: {
+    ver1: { current: savedVersionsCurrent.ver1, history: [], future: [] },
+    ver2: { current: savedVersionsCurrent.ver2, history: [], future: [] },
+    ver3: { current: savedVersionsCurrent.ver3, history: [], future: [] },
+    ver4: { current: savedVersionsCurrent.ver4, history: [], future: [] },
+  },
+  currentVersion: 'ver1',
+};
+
+// Reducer defined above...
 const reducer = (state, action) => {
+  const currentVersion = state.currentVersion;
+  const currentVersionState = state.versions[currentVersion];
+
   switch (action.type) {
     case 'UPDATE_INPUT3':
       return {
         ...state,
-        history: [...state.history, state.current],
-        current: {
-          ...state.current,
-          userInput3: action.payload,
+        versions: {
+          ...state.versions,
+          [currentVersion]: {
+            ...currentVersionState,
+            history: [...currentVersionState.history, currentVersionState.current],
+            current: {
+              ...currentVersionState.current,
+              userInput3: action.payload,
+            },
+            future: [],
+          },
         },
-        future: [],
       };
     case 'UPDATE_INPUT4':
       return {
         ...state,
-        history: [...state.history, state.current],
-        current: {
-          ...state.current,
-          userInput4: action.payload,
+        versions: {
+          ...state.versions,
+          [currentVersion]: {
+            ...currentVersionState,
+            history: [...currentVersionState.history, currentVersionState.current],
+            current: {
+              ...currentVersionState.current,
+              userInput4: action.payload,
+            },
+            future: [],
+          },
         },
-        future: [],
       };
     case 'UNDO':
-      if (state.history.length === 0) return state;
-      const previous = state.history[state.history.length - 1];
-      const newHistory = state.history.slice(0, -1);
+      if (currentVersionState.history.length === 0) return state;
+      const previous = currentVersionState.history[currentVersionState.history.length - 1];
+      const newHistory = currentVersionState.history.slice(0, -1);
       return {
-        current: previous,
-        history: newHistory,
-        future: [state.current, ...state.future],
+        ...state,
+        versions: {
+          ...state.versions,
+          [currentVersion]: {
+            current: previous,
+            history: newHistory,
+            future: [currentVersionState.current, ...currentVersionState.future],
+          },
+        },
       };
     case 'REDO':
-      if (state.future.length === 0) return state;
-      const next = state.future[0];
-      const newFuture = state.future.slice(1);
+      if (currentVersionState.future.length === 0) return state;
+      const next = currentVersionState.future[0];
+      const newFuture = currentVersionState.future.slice(1);
       return {
-        current: next,
-        history: [...state.history, state.current],
-        future: newFuture,
+        ...state,
+        versions: {
+          ...state.versions,
+          [currentVersion]: {
+            current: next,
+            history: [...currentVersionState.history, currentVersionState.current],
+            future: newFuture,
+          },
+        },
       };
     case 'RESET':
       return {
-        current: {
-          userInput3: initialUserInput3,
-          userInput4: initialUserInput4,
+        ...state,
+        versions: {
+          ...state.versions,
+          [currentVersion]: {
+            current: initialUserInput,
+            history: [],
+            future: [],
+          },
         },
-        history: [],
-        future: [],
+      };
+    case 'SWITCH_VERSION':
+      return {
+        ...state,
+        currentVersion: action.payload,
       };
     default:
       return state;
@@ -110,40 +145,27 @@ const reducer = (state, action) => {
 
 const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const currentVersionState = state.versions[state.currentVersion];
 
-  // Functions to update inputs via dispatch
-  const updateUserInput3 = (newInput3) => {
-    dispatch({ type: 'UPDATE_INPUT3', payload: newInput3 });
-  };
-
-  const updateUserInput4 = (newInput4) => {
-    dispatch({ type: 'UPDATE_INPUT4', payload: newInput4 });
-  };
-
-  // Button handlers
-  const handleUndo = () => {
-    dispatch({ type: 'UNDO' });
-  };
-
-  const handleRedo = () => {
-    dispatch({ type: 'REDO' });
-  };
-
-  const handleReset = () => {
-    dispatch({ type: 'RESET' });
-  };
-
-  // Persist current state to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('userInput3', JSON.stringify(state.current.userInput3));
-    localStorage.setItem('userInput4', JSON.stringify(state.current.userInput4));
-  }, [state.current]);
+    const versionsCurrent = {};
+    for (const ver in state.versions) {
+      versionsCurrent[ver] = state.versions[ver].current;
+    }
+    localStorage.setItem('versionsCurrent', JSON.stringify(versionsCurrent));
+  }, [state.versions]);
 
-  // Combined inputs for calculations
+  const updateUserInput3 = (newInput3) => dispatch({ type: 'UPDATE_INPUT3', payload: newInput3 });
+  const updateUserInput4 = (newInput4) => dispatch({ type: 'UPDATE_INPUT4', payload: newInput4 });
+  const handleUndo = () => dispatch({ type: 'UNDO' });
+  const handleRedo = () => dispatch({ type: 'REDO' });
+  const handleReset = () => dispatch({ type: 'RESET' });
+  const handleVersionSwitch = (version) => dispatch({ type: 'SWITCH_VERSION', payload: version });
+
   const combinedInputs = {
-    ...state.current.userInput3,
-    ...state.current.userInput4,
-    duration: state.current.userInput3.toAge - state.current.userInput3.fromAge,
+    ...currentVersionState.current.userInput3,
+    ...currentVersionState.current.userInput4,
+    duration: currentVersionState.current.userInput3.toAge - currentVersionState.current.userInput3.fromAge,
   };
 
   // Calculate tableData4 (pre-retirement growth)
@@ -164,19 +186,8 @@ const App = () => {
   row_Other[0] = calculateValue(combinedInputs.expectedReturn.other, combinedInputs.monthlySavings.other, combinedInputs.existingAssets.other);
   row_Extra[0] = calculateValue(combinedInputs.expectedReturn.extra, combinedInputs.monthlySavings.extra, combinedInputs.existingAssets.extra);
   row_sum[0] = row_Stock[0] + row_MPF[0] + row_Other[0] + row_Extra[0];
-  tableData4.push({
-    year: row_Year[0],
-    age: row_Age[0],
-    stock: row_Stock[0],
-    mpf: row_MPF[0],
-    other: row_Other[0],
-    extra: row_Extra[0],
-    sum: row_sum[0],
-  });
-  chartData.push({
-    name: String(row_Age[0]),
-    sum: row_sum[0],
-  });
+  tableData4.push({ year: row_Year[0], age: row_Age[0], stock: row_Stock[0], mpf: row_MPF[0], other: row_Other[0], extra: row_Extra[0], sum: row_sum[0] });
+  chartData.push({ name: String(row_Age[0]), sum: row_sum[0] });
 
   const numOfWorkingYears = combinedInputs.fromAge - combinedInputs.currentAge;
   for (let i = 1; i < numOfWorkingYears; i++) {
@@ -187,19 +198,8 @@ const App = () => {
     row_Other[i] = calculateValue(combinedInputs.expectedReturn.other, combinedInputs.monthlySavings.other, row_Other[i - 1]);
     row_Extra[i] = calculateValue(combinedInputs.expectedReturn.extra, combinedInputs.monthlySavings.extra, row_Extra[i - 1]);
     row_sum[i] = row_Stock[i] + row_MPF[i] + row_Other[i] + row_Extra[i];
-    tableData4.push({
-      year: row_Year[i],
-      age: row_Age[i],
-      stock: row_Stock[i],
-      mpf: row_MPF[i],
-      other: row_Other[i],
-      extra: row_Extra[i],
-      sum: row_sum[i],
-    });
-    chartData.push({
-      name: String(row_Age[i]),
-      sum: row_sum[i],
-    });
+    tableData4.push({ year: row_Year[i], age: row_Age[i], stock: row_Stock[i], mpf: row_MPF[i], other: row_Other[i], extra: row_Extra[i], sum: row_sum[i] });
+    chartData.push({ name: String(row_Age[i]), sum: row_sum[i] });
   }
 
   // Calculate tableData3 (post-retirement drawdown)
@@ -217,14 +217,7 @@ const App = () => {
   row_E[0] = "";
   row_F[0] = "";
   row_G[0] = Math.max(...row_sum);
-  tableData3.push({
-    year: row_Year3[0],
-    age: row_Age3[0],
-    D: row_D[0],
-    E: row_E[0],
-    F: row_F[0],
-    G: row_G[0],
-  });
+  tableData3.push({ year: row_Year3[0], age: row_Age3[0], D: row_D[0], E: row_E[0], F: row_F[0], G: row_G[0] });
 
   const D2 = combinedInputs.retirementGoal * Math.pow(1 + combinedInputs.inflationAdjustment / 100, combinedInputs.fromAge - combinedInputs.currentAge);
   const E2 = D2 * 12;
@@ -237,18 +230,8 @@ const App = () => {
   row_E[1] = E2;
   row_F[1] = F2;
   row_G[1] = G2;
-  tableData3.push({
-    year: row_Year3[1],
-    age: row_Age3[1],
-    D: row_D[1],
-    E: row_E[1],
-    F: row_F[1],
-    G: row_G[1],
-  });
-  chartData.push({
-    name: String(row_Age3[1]),
-    sum: row_G[1],
-  });
+  tableData3.push({ year: row_Year3[1], age: row_Age3[1], D: row_D[1], E: row_E[1], F: row_F[1], G: row_G[1] });
+  chartData.push({ name: String(row_Age3[1]), sum: row_G[1] });
 
   for (let i = 2; i < combinedInputs.toAge - combinedInputs.fromAge + 2; i++) {
     row_Year3[i] = row_Year3[i - 1] + 1;
@@ -257,50 +240,36 @@ const App = () => {
     row_E[i] = row_D[i] * 12;
     row_F[i] = (row_G[i - 1] - row_E[i]) * combinedInputs.postRetirementReturn / 100;
     row_G[i] = row_G[i - 1] - row_E[i] + row_F[i];
-    tableData3.push({
-      year: row_Year3[i],
-      age: row_Age3[i],
-      D: row_D[i],
-      E: row_E[i],
-      F: row_F[i],
-      G: row_G[i],
-    });
-    chartData.push({
-      name: String(row_Age3[i]),
-      sum: row_G[i],
-    });
+    tableData3.push({ year: row_Year3[i], age: row_Age3[i], D: row_D[i], E: row_E[i], F: row_F[i], G: row_G[i] });
+    chartData.push({ name: String(row_Age3[i]), sum: row_G[i] });
   }
 
-  // Seek calculation functions
   const calculateLeftSeek = (G24) => {
     let G17;
-    const G18 = state.current.userInput3.inflationAdjustment / 100;
-    const G19 = state.current.userInput3.currentAge;
-    const G20 = state.current.userInput3.toAge;
-    const G21 = state.current.userInput3.postRetirementReturn / 100;
-    const E20 = state.current.userInput3.fromAge;
+    const G18 = currentVersionState.current.userInput3.inflationAdjustment / 100;
+    const G19 = currentVersionState.current.userInput3.currentAge;
+    const G20 = currentVersionState.current.userInput3.toAge;
+    const G21 = currentVersionState.current.userInput3.postRetirementReturn / 100;
+    const E20 = currentVersionState.current.userInput3.fromAge;
 
     if (G21 === G18) {
       G17 = G24 / ((G20 - E20 + 1) * 12 * Math.pow(1 + G18, E20 - G19));
     } else {
       G17 = (G24 * (G21 - G18)) / ((1 - Math.pow((1 + G18) / (1 + G21), G20 - E20 + 1)) * 12 * Math.pow(1 + G18, E20 - G19) * (1 + G21));
     }
-    updateUserInput3({
-      ...state.current.userInput3,
-      retirementGoal: G17,
-    });
+    updateUserInput3({ ...currentVersionState.current.userInput3, retirementGoal: G17 });
   };
 
   const calculateRightSeek = (lastRowOfStock, lastRowOfMPF, lastRowOfOther) => {
     let P18;
-    const P19 = state.current.userInput4.existingAssets.extra;
-    const P20 = state.current.userInput4.expectedReturn.extra / 100;
-    const G17 = state.current.userInput3.retirementGoal;
-    const G18 = state.current.userInput3.inflationAdjustment / 100;
-    const G19 = state.current.userInput3.currentAge;
-    const G20 = state.current.userInput3.toAge;
-    const G21 = state.current.userInput3.postRetirementReturn / 100;
-    const E20 = state.current.userInput3.fromAge;
+    const P19 = currentVersionState.current.userInput4.existingAssets.extra;
+    const P20 = currentVersionState.current.userInput4.expectedReturn.extra / 100;
+    const G17 = currentVersionState.current.userInput3.retirementGoal;
+    const G18 = currentVersionState.current.userInput3.inflationAdjustment / 100;
+    const G19 = currentVersionState.current.userInput3.currentAge;
+    const G20 = currentVersionState.current.userInput3.toAge;
+    const G21 = currentVersionState.current.userInput3.postRetirementReturn / 100;
+    const E20 = currentVersionState.current.userInput3.fromAge;
 
     let G24;
     if (G21 === G18) {
@@ -311,26 +280,16 @@ const App = () => {
 
     const lastRowOfExtra = G24 - lastRowOfStock - lastRowOfMPF - lastRowOfOther;
     P18 = (lastRowOfExtra - P19 * (1 + P20 / 12) ** (12 * (E20 - G19))) * (P20 / 12) / ((1 + P20 / 12) ** (12 * (E20 - G19)) - 1);
-
     updateUserInput4({
-      ...state.current.userInput4,
-      monthlySavings: {
-        ...state.current.userInput4.monthlySavings,
-        extra: P18,
-      },
+      ...currentVersionState.current.userInput4,
+      monthlySavings: { ...currentVersionState.current.userInput4.monthlySavings, extra: P18 },
     });
   };
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box
-        sx={{
-          p: { xs: 1, md: 0 },
-          minHeight: '100vh',
-          backgroundColor: 'background.default',
-        }}
-      >
+      <Box sx={{ p: { xs: 1, md: 0 }, minHeight: '100vh', backgroundColor: 'background.default' }}>
         <AppBar position="static" sx={{ backgroundColor: '#219a52' }}>
           <Toolbar>
             <IconButton edge="start" color="inherit" aria-label="back">
@@ -343,80 +302,49 @@ const App = () => {
         </AppBar>
         <div className="main-app">
           <style>{`
-            .main-app {
-              max-width: 1600px;
-              margin: 0 auto;
-              padding: 10px;
-              font-family: 'Segoe UI', sans-serif;
-            }
-            .result td {
-              font-size: 18px;
-              padding: 0px;
-              text-align: center;
-            }
-            .seek-button {
-              margin: 5px;
-              padding: 10px 20px;
-              font-size: 16px;
-              cursor: pointer;
-            }
+            .main-app { max-width: 1600px; margin: 0 auto; padding: 10px; font-family: 'Segoe UI', sans-serif; }
+            .result td { font-size: 18px; padding: 0px; text-align: center; }
+            .seek-button { margin: 5px; padding: 10px 20px; font-size: 16px; cursor: pointer; }
           `}</style>
-          {/* User Inputs */}
           <Grid container spacing={1}>
             <Grid item xs={12} md={6}>
               <UserInput3
-                inputs={state.current.userInput3}
+                inputs={currentVersionState.current.userInput3}
                 setInputs={updateUserInput3}
                 onCalculate={() => calculateLeftSeek(row_G[0])}
               />
             </Grid>
             <Grid item xs={12} md={6}>
               <UserInput4
-                inputs={state.current.userInput4}
+                inputs={currentVersionState.current.userInput4}
                 setInputs={updateUserInput4}
-                onCalculate={() =>
-                  calculateRightSeek(
-                    row_Stock[row_Stock.length - 1],
-                    row_MPF[row_MPF.length - 1],
-                    row_Other[row_Other.length - 1]
-                  )
-                }
+                onCalculate={() => calculateRightSeek(row_Stock[row_Stock.length - 1], row_MPF[row_MPF.length - 1], row_Other[row_Other.length - 1])}
               />
             </Grid>
           </Grid>
-          {/* Chart */}
           <Chart
+            title={`Version ${state.currentVersion.slice(3)}`}
             data={chartData}
-            currentAge={state.current.userInput3.currentAge}
-            fromAge={state.current.userInput3.fromAge}
-            toAge={state.current.userInput3.toAge}
+            currentAge={currentVersionState.current.userInput3.currentAge}
+            fromAge={currentVersionState.current.userInput3.fromAge}
+            toAge={currentVersionState.current.userInput3.toAge}
           />
-          {/* Result Tables (commented out) */}
-          {/* <Grid container spacing={1}>
-            <Grid item xs={12} md={6}>
-              <ResultTable4 data={tableData4} />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <ResultTable3 data={tableData3} />
-            </Grid>
-          </Grid> */}
-          {/* Action Buttons */}
-          <button className="seek-button" onClick={handleReset}>
-            Reset
-          </button>
-          <button className="seek-button" onClick={handleUndo}>
-            Undo
-          </button>
-          <button className="seek-button" onClick={handleRedo}>
-            Redo
-          </button>
+          <LanguageSwitcher
+        onReset={handleReset}
+        onUndo={handleUndo}
+        onRedo={handleRedo}
+        undoDisabled={currentVersionState.history.length === 0}
+        redoDisabled={currentVersionState.future.length === 0}
+        currentVersion={state.currentVersion}
+        onVersionSwitch={handleVersionSwitch}
+      />
+          
         </div>
       </Box>
     </ThemeProvider>
   );
 };
 
-// Helper function to calculate future value
 function calculateValue(expectedReturn, monthlySaving, existingAsset) {
   const rate = expectedReturn / 100 / 12;
   const nper = 12;

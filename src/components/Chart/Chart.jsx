@@ -1,9 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine, Line } from 'recharts';
 import Card from '@mui/material/Card';
+import Typography from '@mui/material/Typography'; // Import Typography for the title
 
 const ChartComponent = (props) => {
-  let { data, currentAge, fromAge, toAge } = props;
+  let { title, data, currentAge, fromAge, toAge } = props; // Add title to props
   const containerRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
@@ -39,15 +40,12 @@ const ChartComponent = (props) => {
     if (absNum >= 1000000) {
       const kValue = Math.round(absNum / 1000000);
       return `${num < 0 ? '-' : ''}${kValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}M`;
-    }else
-    if (absNum >= 1000) {
+    } else if (absNum >= 1000) {
       const kValue = Math.round(absNum / 1000);
       return `${num < 0 ? '-' : ''}${kValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}K`;
-
     }
     return num.toString();
-
-  }
+  };
 
   return (
     <Card
@@ -60,20 +58,23 @@ const ChartComponent = (props) => {
         boxShadow: '0 2px 15px rgba(0,0,0,0.1)',
       }}
     >
-      
+      {/* Add the title here */}
+      <Typography variant="h6" align="center" sx={{ mt: 2 }}>
+        {title}
+      </Typography>
       <AreaChart
         width={dimensions.width}
-        height={dimensions.height}
+        height={dimensions.height - 40} // Adjust height to make room for the title
         data={props.data}
         margin={{ top: 20, right: 30, left: 30, bottom: 20 }}
       >
         <defs>
           <linearGradient id="gradientFillFirst" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#1976d2" stopOpacity={1} />
-            <stop offset="100%" stopColor="#1976d2" stopOpacity={0.5} />
+            <stop offset="100%" stopColor="#219a52" stopOpacity={1} />
+            <stop offset="100%" stopColor="#219a52" stopOpacity={1} />
           </linearGradient>
           <linearGradient id="gradientFillSecond" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#CA828EFF" stopOpacity={0.8} />
+            <stop offset="100%" stopColor="#FF002BFF" stopOpacity={0.5} />
             <stop offset="100%" stopColor="#CA828EFF" stopOpacity={0.5} />
           </linearGradient>
         </defs>
@@ -93,7 +94,6 @@ const ChartComponent = (props) => {
             position: 'left',
             offset: 10,
           }}
-          //tickFormatter={(value) => `$${value.toLocaleString()}`}
           tickFormatter={(value) => formatNumber(value)}
           tick={{ fill: '#666' }}
         />
@@ -101,10 +101,6 @@ const ChartComponent = (props) => {
           formatter={(value) => [`$${Number(value).toLocaleString()}`, 'Amount']}
           labelFormatter={(label) => `Age: ${label}`}
         />
-        {/* <Legend
-          wrapperStyle={{ paddingTop: '20px' }}
-          formatter={() => <span style={{ color: '#333' }}>Total Savings</span>}
-        /> */}
         <Area
           type="monotone"
           dataKey="sum"
@@ -137,7 +133,9 @@ const ChartComponent = (props) => {
   );
 };
 
+// Set default props, including a default title
 ChartComponent.defaultProps = {
+  title: 'Retirement Savings', // Default title if none is provided
   data: [],
 };
 
