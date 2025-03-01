@@ -1,6 +1,6 @@
 // LanguageSwitcher.jsx
 import React from 'react';
-import {Card, Box, Button } from '@mui/material';
+import { Card, Box, Button } from '@mui/material';
 
 const LanguageSwitcher = ({
   onReset,
@@ -13,7 +13,6 @@ const LanguageSwitcher = ({
 }) => {
   return (
     <Card
-      
       sx={{
         width: '100%',
         minHeight: 70,
@@ -22,31 +21,92 @@ const LanguageSwitcher = ({
         boxShadow: '0 2px 15px rgba(0,0,0,0.1)',
       }}
     >
-    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, gap: 1 }}>
-      <Button variant="contained" onClick={onReset}>
-        Reset
-      </Button>
-      <Button variant="contained" onClick={onUndo} disabled={undoDisabled}>
-        Undo
-      </Button>
-      <Button variant="contained" onClick={onRedo} disabled={redoDisabled}>
-        Redo
-      </Button>
-      {[1, 2, 3, 4].map((ver) => (
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, gap: 1 }}>
+        {/* Reset Button */}
         <Button
-          key={ver}
-          variant={currentVersion === `ver${ver}` ? 'contained' : 'outlined'}
-          onClick={() => onVersionSwitch(`ver${ver}`)}
+          variant="contained"
+          onClick={onReset}
           sx={{
-            minWidth: '60px',
-            padding: '4px 10px',
-            color: currentVersion === `ver${ver}` ? 'white' : 'primary.main',
+            backgroundColor: '#219a52',
+            color: 'white',
+            '&:hover': {
+              backgroundColor: '#1b7e43', // Darker shade on hover
+            },
           }}
         >
-          Ver. {ver}
+          Reset
         </Button>
-      ))}
-    </Box>
+
+        {/* Undo Button */}
+        <Button
+          variant="contained"
+          onClick={onUndo}
+          disabled={undoDisabled}
+          sx={{
+            backgroundColor: '#219a52',
+            color: 'white',
+            '&:hover': {
+              backgroundColor: '#1b7e43',
+            },
+            '&.Mui-disabled': {
+              backgroundColor: '#b0b0b0', // Custom disabled color
+              color: '#e0e0e0',
+            },
+          }}
+        >
+          Undo
+        </Button>
+
+        {/* Redo Button */}
+        <Button
+          variant="contained"
+          onClick={onRedo}
+          disabled={redoDisabled}
+          sx={{
+            backgroundColor: '#219a52',
+            color: 'white',
+            '&:hover': {
+              backgroundColor: '#1b7e43',
+            },
+            '&.Mui-disabled': {
+              backgroundColor: '#b0b0b0',
+              color: '#e0e0e0',
+            },
+          }}
+        >
+          Redo
+        </Button>
+
+        {/* Version Buttons */}
+        {[1, 2, 3, 4].map((ver) => (
+          <Button
+            key={ver}
+            variant={currentVersion === `ver${ver}` ? 'contained' : 'outlined'}
+            onClick={() => onVersionSwitch(`ver${ver}`)}
+            sx={{
+              minWidth: '60px',
+              padding: '4px 10px',
+              ...(currentVersion === `ver${ver}`
+                ? {
+                    backgroundColor: '#219a52',
+                    color: 'white',
+                    '&:hover': {
+                      backgroundColor: '#1b7e43',
+                    },
+                  }
+                : {
+                    borderColor: '#219a52',
+                    color: '#219a52',
+                    '&:hover': {
+                      backgroundColor: '#e0f2e9', // Light green on hover
+                    },
+                  }),
+            }}
+          >
+            Ver. {ver}
+          </Button>
+        ))}
+      </Box>
     </Card>
   );
 };
