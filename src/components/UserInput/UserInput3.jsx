@@ -1,29 +1,29 @@
 import React from 'react';
 import Card from '@mui/material/Card';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import SearchIcon from '@mui/icons-material/Search';
 
 const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
   // Formatting functions
-   const formatCurrency = (value) => `$${parseInt(value).toLocaleString('en-US')}`;
-  //const parseCurrency = (value) => value.replace(/[^0-9]/g, '');
+  const formatCurrency = (value) => `$${parseInt(value).toLocaleString('en-US')}`;
   const parseCurrency = (value) => parseInt(value.replace(/\D/g, ''), 10) || 0;
+
   // Handlers
   const handleRetirementGoal = (e) => {
     const rawValue = parseCurrency(e.target.value);
     setInputs({ ...inputs, retirementGoal: rawValue });
   };
 
-  const handleAgeChange = (field, value) => {
-    setInputs({ ...inputs, [field]: value.toString() });
+  // Click handler for the search button
+  const handleSearchClick = (event) => {
+    onCalculate(); // Trigger the calculation function
+    if (event) {
+      event.currentTarget.blur(); // Remove focus from the button
+    }
   };
 
-  // const formatCurrency = (value) => {
-  //   const convertedValue = currencySwitch ? value * 7.8 : value;
-  //   return new Intl.NumberFormat('en-US', {
-  //     style: 'currency',
-  //     currency: currencySwitch ? 'HKD' : 'USD',
-  //     maximumFractionDigits: 0,
-  //   }).format(isNaN(convertedValue) ? 0 : convertedValue);
-  // };
   return (
     <Card
       sx={{
@@ -37,8 +37,8 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
       <style>{`
         .form-grid {
           display: grid;
-          grid-template-columns: 1fr 1fr auto;
-          gap: 0.1 rem;
+          grid-template-columns: 1fr 1fr;
+          gap: 0.1rem;
           align-items: center;
         }
 
@@ -46,13 +46,13 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
           font-weight: 600;
           color: #2c3e50;
           padding: 0.7rem;
-          font-size: 0.95rem;
+          font-size: 1.2rem;
         }
 
         .form-input {
           width: 100%;
-          padding: 0.6rem; //space hight
-          border: 1px solid #219a52;
+          padding: 0.6rem;
+          border: 1px solid #2c3e50;
           border-radius: 6px;
           font-size: 1rem;
           text-align: center;
@@ -65,31 +65,10 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
           box-shadow: 0 0 0 3px rgba(52,152,219,0.2);
         }
 
-        .seek-button {
-          background: #219a52;
-          color: white;
-          border: none;
-          padding: 0.8rem 1.5rem;
-          border-radius: 6px;
-          cursor: pointer;
-          font-size: 0.95rem;
-          transition: all 0.3s ease;
-          margin-left: 1rem;
-        }
-
-        .seek-button:hover {
-          background: #219a52;
-          transform: translateY(-1px);
-        }
-
         .range-group {
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: 0.5rem;
-        }
-
-        .spacer {
-          width: 5.5rem;
         }
 
         .main-app h2 {
@@ -101,17 +80,48 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
       <h2>Retirement Plan</h2>
       <div className="form-grid">
         <label className="form-label">Monthly Income Goal</label>
-        <input
+        <TextField
           type="text"
-          className="form-input"
           value={formatCurrency(inputs.retirementGoal)}
           onChange={handleRetirementGoal}
           onBlur={() => setInputs({ ...inputs, retirementGoal: inputs.retirementGoal || 0 })}
-          step={0.01}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={handleSearchClick}
+                  sx={{
+                    backgroundColor: '#219a52',
+                    '&:hover': {
+                      backgroundColor: '#1e7a42',
+                    },
+                  }}
+                >
+                  <SearchIcon sx={{ color: 'white' }} />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              border: '2px solid #2c3e50',
+              borderRadius: '6px',
+              '&:focus-within': {
+                borderColor: '#2c3e50',
+                boxShadow: '0 0 0 3px rgba(52,152,219,0.2)',
+              },
+              '& fieldset': {
+                borderColor: '#2c3e50',
+                borderWidth: '2px',
+              },
+            },
+            '& .MuiInputBase-input': {
+              textAlign: 'center',
+              fontSize: '1rem',
+            },
+          }}
+          variant="outlined"
         />
-        <button className="seek-button" onClick={onCalculate}>
-          Seek
-        </button>
 
         <label className="form-label">Inflation Adjustment</label>
         <input
@@ -120,7 +130,6 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
           value={`${inputs.inflationAdjustment}%`}
           onChange={(e) => setInputs({ ...inputs, inflationAdjustment: parseCurrency(e.target.value) })}
         />
-        <div className="spacer" />
 
         <label className="form-label">Current Age</label>
         <input
@@ -131,7 +140,6 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
           min="1"
           max={inputs.fromAge}
         />
-        <div className="spacer" />
 
         <label className="form-label">Income Collection Ages</label>
         <div className="range-group">
@@ -151,17 +159,15 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
             min={inputs.fromAge}
           />
         </div>
-        <div className="spacer" />
 
         <label className="form-label">Post-Retirement Return</label>
         <input
           type="text"
           className="form-input"
           value={`${inputs.postRetirementReturn}%`}
-          onChange={(e) => setInputs({ ...inputs, postRetirementReturn: parseCurrency(e.target.value)})}
+          onChange={(e) => setInputs({ ...inputs, postRetirementReturn: parseCurrency(e.target.value) })}
           step="0.1"
         />
-        <div className="spacer" />
       </div>
     </Card>
   );
