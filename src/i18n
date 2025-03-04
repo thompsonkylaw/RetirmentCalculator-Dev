@@ -14,7 +14,7 @@ i18next
           welcome: 'Welcome',
           greeting: 'Hello, {{name}}!',
           Ver: 'Ver',
-          "Reset Data": 'Data',
+          "Reset Data": 'Reset',
           Undo: 'Undo',
           Redo: 'Redo',
           retirementPlan: 'Retirement Plan',

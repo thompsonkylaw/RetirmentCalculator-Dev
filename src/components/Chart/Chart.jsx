@@ -72,7 +72,7 @@ const ChartComponent = (props) => {
       ref={containerRef}
       sx={{
         width: '100%',
-        height: '400px',
+        height: '450px',
         margin: '20px 0',
         borderRadius: '10px',
         boxShadow: '0 2px 15px rgba(0,0,0,0.1)',
@@ -85,7 +85,7 @@ const ChartComponent = (props) => {
         width={dimensions.width}
         height={dimensions.height - 40}
         data={data}
-        margin={{ top: 20, right: 30, left: 30, bottom: 20 }}
+        margin={{ top: 5, right: 30, left: 30, bottom: 30 }}
       >
         <defs>
           <linearGradient id="gradientFillFirst" x1="0" y1="0" x2="0" y2="1">
@@ -93,8 +93,8 @@ const ChartComponent = (props) => {
             <stop offset="100%" stopColor="#219a52" stopOpacity={1} />
           </linearGradient>
           <linearGradient id="gradientFillSecond" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="100%" stopColor="#FF002BFF" stopOpacity={0.5} />
-            <stop offset="100%" stopColor="#CA828EFF" stopOpacity={0.5} />
+            <stop offset="100%" stopColor="#ff9900" stopOpacity={1} />
+            <stop offset="100%" stopColor="#ff9900" stopOpacity={1} />
           </linearGradient>
         </defs>
         <CartesianGrid strokeDasharray="3 3" stroke="#eee" />

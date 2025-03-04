@@ -307,14 +307,14 @@ const App = () => {
             .seek-button { margin: 5px; padding: 10px 20px; font-size: 16px; cursor: pointer; }
           `}</style>
           <Grid container spacing={1}>
-            <Grid item xs={12} md={5}>
+            <Grid item xs={12} md={6}>
               <UserInput3
                 inputs={currentVersionState.current.userInput3}
                 setInputs={updateUserInput3}
                 onCalculate={() => calculateLeftSeek(row_G[0])}
               />
             </Grid>
-            <Grid item xs={12} md={7}>
+            <Grid item xs={12} md={6}>
               <UserInput4
                 inputs={currentVersionState.current.userInput4}
                 setInputs={updateUserInput4}

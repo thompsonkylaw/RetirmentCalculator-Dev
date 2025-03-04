@@ -35,8 +35,8 @@ const LanguageSwitcher = ({
   };
 
   return (
-    <Card sx={{ p: 2, borderRadius: 3, boxShadow: 3, mt: 2 }}>
-      <Grid container spacing={2}>
+    <Card sx={{ p: 1, borderRadius: 3, boxShadow: 3, mt: 0 }}>
+      <Grid container spacing={1}>
         {/* Version Select Buttons */}
         <Grid item xs={12}>
           <Box sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
