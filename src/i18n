@@ -11,6 +11,7 @@ i18next
     resources: {
       en: {
         translation: {
+          'Retirement Calculator':'Retirement Calculator',  
           welcome: 'Welcome',
           greeting: 'Hello, {{name}}!',
           Ver: 'Ver',
@@ -42,6 +43,7 @@ i18next
       },
       "zh-HK": {
         translation: {
+          'Retirement Calculator':'退休計算機',    
           welcome: '歡迎',
           greeting: '你好, {{name}}!',
           Ver: '版本',
@@ -73,6 +75,7 @@ i18next
       },
       "zh-CN": {
         translation: {
+            'Retirement Calculator':'退休计算机',   
           welcome: '欢迎',
           greeting: '你好, {{name}}!',
           Ver: '版本',

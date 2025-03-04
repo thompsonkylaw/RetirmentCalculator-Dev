@@ -89,12 +89,12 @@ const ChartComponent = (props) => {
       >
         <defs>
           <linearGradient id="gradientFillFirst" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="100%" stopColor="#219a52" stopOpacity={1} />
-            <stop offset="100%" stopColor="#219a52" stopOpacity={1} />
+            <stop offset="100%" stopColor="#219a64" stopOpacity={1} />
+            <stop offset="100%" stopColor="#219a64" stopOpacity={1} />
           </linearGradient>
           <linearGradient id="gradientFillSecond" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="100%" stopColor="#ff9900" stopOpacity={1} />
-            <stop offset="100%" stopColor="#ff9900" stopOpacity={1} />
+            <stop offset="100%" stopColor="#ff7700" stopOpacity={1} />
+            <stop offset="100%" stopColor="#ff7700" stopOpacity={1} />
           </linearGradient>
         </defs>
         <CartesianGrid strokeDasharray="3 3" stroke="#eee" />

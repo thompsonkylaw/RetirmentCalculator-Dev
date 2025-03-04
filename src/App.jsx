@@ -13,6 +13,7 @@ import UserInput3 from './components/UserInput/UserInput3';
 import UserInput4 from './components/UserInput/UserInput4';
 import Chart from './components/Chart/Chart';
 import LanguageSwitcher from './components/UserInput/LanguageSwitcher';
+import { useTranslation } from 'react-i18next'; // Import for i18n support
 
 const theme = createTheme();
 
@@ -144,6 +145,7 @@ const reducer = (state, action) => {
 };
 
 const App = () => {
+  const { t } = useTranslation(); // 
   const [state, dispatch] = useReducer(reducer, initialState);
   const currentVersionState = state.versions[state.currentVersion];
 
@@ -296,7 +298,7 @@ const App = () => {
               <ArrowBackIcon />
             </IconButton>
             <Typography variant="h6" sx={{ flexGrow: 1 }}>
-              Retirement Calculator
+              {t('Retirement Calculator')}
             </Typography>
           </Toolbar>
         </AppBar>
