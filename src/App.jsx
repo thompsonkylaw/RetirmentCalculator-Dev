@@ -307,38 +307,41 @@ const App = () => {
             .seek-button { margin: 5px; padding: 10px 20px; font-size: 16px; cursor: pointer; }
           `}</style>
           <Grid container spacing={1}>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={5}>
               <UserInput3
                 inputs={currentVersionState.current.userInput3}
                 setInputs={updateUserInput3}
                 onCalculate={() => calculateLeftSeek(row_G[0])}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={7}>
               <UserInput4
                 inputs={currentVersionState.current.userInput4}
                 setInputs={updateUserInput4}
                 onCalculate={() => calculateRightSeek(row_Stock[row_Stock.length - 1], row_MPF[row_MPF.length - 1], row_Other[row_Other.length - 1])}
               />
             </Grid>
+            <Grid item xs={12}>
+              <Chart
+                title={`Version ${state.currentVersion.slice(3)}`}
+                data={chartData}
+                currentAge={currentVersionState.current.userInput3.currentAge}
+                fromAge={currentVersionState.current.userInput3.fromAge}
+                toAge={currentVersionState.current.userInput3.toAge}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <LanguageSwitcher
+                onReset={handleReset}
+                onUndo={handleUndo}
+                onRedo={handleRedo}
+                undoDisabled={currentVersionState.history.length === 0}
+                redoDisabled={currentVersionState.future.length === 0}
+                currentVersion={state.currentVersion}
+                onVersionSwitch={handleVersionSwitch}
+              />
+            </Grid>
           </Grid>
-          <Chart
-            title={`Version ${state.currentVersion.slice(3)}`}
-            data={chartData}
-            currentAge={currentVersionState.current.userInput3.currentAge}
-            fromAge={currentVersionState.current.userInput3.fromAge}
-            toAge={currentVersionState.current.userInput3.toAge}
-          />
-          <LanguageSwitcher
-        onReset={handleReset}
-        onUndo={handleUndo}
-        onRedo={handleRedo}
-        undoDisabled={currentVersionState.history.length === 0}
-        redoDisabled={currentVersionState.future.length === 0}
-        currentVersion={state.currentVersion}
-        onVersionSwitch={handleVersionSwitch}
-      />
-          
         </div>
       </Box>
     </ThemeProvider>
