@@ -31,7 +31,6 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
       borderRadius: '6px',
       '& fieldset': {
         borderColor: '#2c3e50',
-        // borderWidth removed to use default (1px)
       },
       '&:focus-within': {
         borderColor: '#2c3e50',
@@ -101,89 +100,91 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
       `}</style>
 
       <h2>Saving & Investment</h2>
-      <div className="input-grid">
-        {/* Headers */}
-        <div />
-        <div className="grid-header">Stock</div>
-        <div className="grid-header">MPF</div>
-        <div className="grid-header">Other</div>
-        <div className="grid-header">Extra</div>
+      <div style={{ overflowX: 'auto' }}>
+        <div className="input-grid" style={{ minWidth: '515px' }}>
+          {/* Headers */}
+          <div />
+          <div className="grid-header">Stock</div>
+          <div className="grid-header">MPF</div>
+          <div className="grid-header">Other</div>
+          <div className="grid-header">Extra</div>
 
-        {/* Monthly Savings Row */}
-        <div className="grid-label">Monthly Savings</div>
-        {['stock', 'mpf', 'other', 'extra'].map((field) => {
-          const isExtra = field === 'extra';
-          const inputProps = isExtra
-            ? {
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={(event) => {
-                        onCalculate();
-                        if (event) event.currentTarget.blur();
-                      }}
-                      sx={{
-                        backgroundColor: '#219a52',
-                        '&:hover': {
-                          backgroundColor: '#1e8f4a',
-                        },
-                      }}
-                    >
-                      <SearchIcon sx={{ color: 'white' }} />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }
-            : {};
-          const fieldSx = isExtra
-            ? {
-                ...textFieldSx,
-                '& .MuiOutlinedInput-root fieldset': { borderWidth: '4px' },
-              }
-            : textFieldSx;
-          return (
+          {/* Monthly Savings Row */}
+          <div className="grid-label">Monthly Savings</div>
+          {['stock', 'mpf', 'other', 'extra'].map((field) => {
+            const isExtra = field === 'extra';
+            const inputProps = isExtra
+              ? {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={(event) => {
+                          onCalculate();
+                          if (event) event.currentTarget.blur();
+                        }}
+                        sx={{
+                          backgroundColor: '#219a52',
+                          '&:hover': {
+                            backgroundColor: '#1e8f4a',
+                          },
+                        }}
+                      >
+                        <SearchIcon sx={{ color: 'white' }} />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }
+              : {};
+            const fieldSx = isExtra
+              ? {
+                  ...textFieldSx,
+                  '& .MuiOutlinedInput-root fieldset': { borderWidth: '4px' },
+                }
+              : textFieldSx;
+            return (
+              <TextField
+                key={field}
+                value={formatCurrency(inputs.monthlySavings[field])}
+                onChange={(e) => handleCurrencyChange('monthlySavings', field, e.target.value)}
+                inputProps={{ inputMode: 'decimal' }}
+                InputProps={inputProps}
+                sx={fieldSx}
+              />
+            );
+          })}
+
+          {/* Existing Assets Row */}
+          <div className="grid-label">Existing Assets</div>
+          {['stock', 'mpf', 'other', 'extra'].map((field) => (
             <TextField
               key={field}
-              value={formatCurrency(inputs.monthlySavings[field])}
-              onChange={(e) => handleCurrencyChange('monthlySavings', field, e.target.value)}
+              value={formatCurrency(inputs.existingAssets[field])}
+              onChange={(e) => handleCurrencyChange('existingAssets', field, e.target.value)}
               inputProps={{ inputMode: 'decimal' }}
-              InputProps={inputProps}
-              sx={fieldSx}
+              sx={textFieldSx}
             />
-          );
-        })}
+          ))}
 
-        {/* Existing Assets Row */}
-        <div className="grid-label">Existing Assets</div>
-        {['stock', 'mpf', 'other', 'extra'].map((field) => (
-          <TextField
-            key={field}
-            value={formatCurrency(inputs.existingAssets[field])}
-            onChange={(e) => handleCurrencyChange('existingAssets', field, e.target.value)}
-            inputProps={{ inputMode: 'decimal' }}
-            sx={textFieldSx}
-          />
-        ))}
-
-        {/* Expected Return Row */}
-        <div className="grid-label">Expected Return</div>
-        {['stock', 'mpf', 'other', 'extra'].map((field) => (
-          <TextField
-            key={field}
-            value={`${inputs.expectedReturn[field]}%`}
-            onChange={(e) =>
-              setInputs({
-                ...inputs,
-                expectedReturn: {
-                  ...inputs.expectedReturn,
-                  [field]: parseCurrency(e.target.value),
-                },
-              })
-            }
-            inputProps={{ inputMode: 'decimal' }}
-            sx={textFieldSx}
-          />
-        ))}
+          {/* Expected Return Row */}
+          <div className="grid-label">Expected Return</div>
+          {['stock', 'mpf', 'other', 'extra'].map((field) => (
+            <TextField
+              key={field}
+              value={`${inputs.expectedReturn[field]}%`}
+              onChange={(e) =>
+                setInputs({
+                  ...inputs,
+                  expectedReturn: {
+                    ...inputs.expectedReturn,
+                    [field]: parseCurrency(e.target.value),
+                  },
+                })
+              }
+              inputProps={{ inputMode: 'decimal' }}
+              sx={textFieldSx}
+            />
+          ))}
+        </div>
       </div>
     </Card>
   );
