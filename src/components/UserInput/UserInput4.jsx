@@ -1,17 +1,22 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next'; // Import for i18n support
+import { useTranslation } from 'react-i18next';
 import Card from '@mui/material/Card';
+import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 
 const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
-  const { t } = useTranslation(); // Hook to access translation function
+  const { t } = useTranslation();
 
+  // Format currency values with a dollar sign and thousands separator
   const formatCurrency = (value) => `$${parseInt(value).toLocaleString('en-US')}`;
+
+  // Parse currency input by removing non-digits
   const parseCurrency = (value) => parseInt(value.replace(/\D/g, ''), 10) || 0;
 
+  // Handle changes for currency fields (Monthly Savings and Existing Assets)
   const handleCurrencyChange = (category, field, value) => {
     value = parseCurrency(value);
     setInputs({
@@ -23,6 +28,7 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
     });
   };
 
+  // Common TextField styling
   const textFieldSx = {
     position: 'relative',
     '& .MuiInputBase-input': {
@@ -62,9 +68,10 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
         padding: '0.2rem',
         borderRadius: '10px',
         boxShadow: '0 2px 15px rgba(0,0,0,0.1)',
-        minHeight: 362,
+        minHeight: 320,
       }}
     >
+      {/* Inline CSS for grid layout */}
       <style>{`
         .input-grid {
           display: grid;
@@ -79,13 +86,13 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
           text-align: center;
           padding: 0.8rem;
           background: #f8f9fa;
-          border-radius: 6px;
+          borderRadius: 6px;
           font-size: 1rem;
         }
         .grid-label {
           font-weight: 600;
           color: #2c3e50;
-          padding: 0.4rem;
+          padding: 0.1rem;
           text-align: right;
         }
         @media (max-width: 1300px) {
@@ -169,20 +176,32 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
           ))}
 
           {/* Expected Return Row */}
+          {/* Note: Values are stored as strings to allow decimal input (e.g., "5.5").
+               Parse with parseFloat(inputs.expectedReturn[field]) || 0 in calculations. */}
           <div className="grid-label">{t('expectedReturn')}</div>
           {['stock', 'mpf', 'other', 'extra'].map((field) => (
             <TextField
               key={field}
-              value={`${inputs.expectedReturn[field]}%`}
-              onChange={(e) =>
+              value={inputs.expectedReturn[field]} // Stored as string, e.g., "5", "5.", "5.5"
+              onChange={(e) => {
+                let value = e.target.value;
+                // Replace commas with periods to support both decimal separators
+                value = value.replace(',', '.');
                 setInputs({
                   ...inputs,
                   expectedReturn: {
                     ...inputs.expectedReturn,
-                    [field]: parseCurrency(e.target.value),
+                    [field]: value,
                   },
-                })
-              }
+                });
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Box sx={{ marginRight: '8px' }}>%</Box>
+                  </InputAdornment>
+                ),
+              }}
               inputProps={{ inputMode: 'decimal' }}
               sx={textFieldSx}
             />

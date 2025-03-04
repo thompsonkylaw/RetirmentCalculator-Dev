@@ -14,6 +14,8 @@ import UserInput4 from './components/UserInput/UserInput4';
 import Chart from './components/Chart/Chart';
 import LanguageSwitcher from './components/UserInput/LanguageSwitcher';
 import { useTranslation } from 'react-i18next'; // Import for i18n support
+import ResultTable4 from './components/ResultTable/ResultTable4';
+
 
 const theme = createTheme();
 
@@ -263,6 +265,7 @@ const App = () => {
   };
 
   const calculateRightSeek = (lastRowOfStock, lastRowOfMPF, lastRowOfOther) => {
+    console.log('lastRowOfStock',lastRowOfStock);
     let P18;
     const P19 = currentVersionState.current.userInput4.existingAssets.extra;
     const P20 = currentVersionState.current.userInput4.expectedReturn.extra / 100;
@@ -308,15 +311,15 @@ const App = () => {
             .result td { font-size: 18px; padding: 0px; text-align: center; }
             .seek-button { margin: 5px; padding: 10px 20px; font-size: 16px; cursor: pointer; }
           `}</style>
-          <Grid container spacing={0}>
-            <Grid item xs={12} md={6}>
+          <Grid container spacing={0.5}>
+            <Grid item xs={12} md={5}>
               <UserInput3
                 inputs={currentVersionState.current.userInput3}
                 setInputs={updateUserInput3}
                 onCalculate={() => calculateLeftSeek(row_G[0])}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={7}>
               <UserInput4
                 inputs={currentVersionState.current.userInput4}
                 setInputs={updateUserInput4}
@@ -343,6 +346,7 @@ const App = () => {
                 onVersionSwitch={handleVersionSwitch}
               />
             </Grid>
+            {/* <ResultTable4 data={tableData4} /> */}
           </Grid>
         </div>
       </Box>
@@ -353,9 +357,10 @@ const App = () => {
 function calculateValue(expectedReturn, monthlySaving, existingAsset) {
   const rate = expectedReturn / 100 / 12;
   const nper = 12;
-  const FV = monthlySaving * ((Math.pow(1 + rate, nper) - 1) / rate);
+  const FV = monthlySaving * (rate === 0 ? nper : ((Math.pow(1 + rate, nper) - 1) / rate));
   const Lumpsum = existingAsset * Math.pow(1 + rate, 12);
   return FV + Lumpsum;
 }
+
 
 export default App;
