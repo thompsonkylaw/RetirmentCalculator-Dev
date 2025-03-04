@@ -39,7 +39,7 @@ const LanguageSwitcher = ({
       <Grid container spacing={1}>
         {/* Version Select Buttons */}
         <Grid item xs={12}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-evenly' ,p:2}}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-evenly', p: 2 }}>
             {[1, 2, 3, 4].map((ver) => (
               <Button
                 key={ver}
@@ -47,7 +47,7 @@ const LanguageSwitcher = ({
                 onClick={() => onVersionSwitch(`ver${ver}`)}
                 sx={{
                   borderRadius: '16px',
-                  minWidth: '160px',
+                  minWidth: { xs: '60px', sm: '160px' }, // Responsive minWidth
                   padding: '4px 10px',
                   backgroundColor: currentVersion === `ver${ver}` ? '#219a52' : 'transparent',
                   color: currentVersion === `ver${ver}` ? 'white' : '#219a52',

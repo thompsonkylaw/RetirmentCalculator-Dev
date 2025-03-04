@@ -265,7 +265,7 @@ const App = () => {
   };
 
   const calculateRightSeek = (lastRowOfStock, lastRowOfMPF, lastRowOfOther) => {
-    console.log('lastRowOfStock',lastRowOfStock);
+    // console.log('lastRowOfStock',lastRowOfStock);
     let P18;
     const P19 = currentVersionState.current.userInput4.existingAssets.extra;
     const P20 = currentVersionState.current.userInput4.expectedReturn.extra / 100;
