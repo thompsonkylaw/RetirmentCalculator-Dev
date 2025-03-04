@@ -1,13 +1,16 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine, Line } from 'recharts';
+import { useTranslation } from 'react-i18next';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine, Line } from 'recharts';
 import Card from '@mui/material/Card';
-import Typography from '@mui/material/Typography'; // Import Typography for the title
+import Typography from '@mui/material/Typography';
 
 const ChartComponent = (props) => {
-  let { title, data, currentAge, fromAge, toAge } = props; // Add title to props
+  const { title, data, currentAge, fromAge, toAge } = props;
+  const { t, i18n } = useTranslation();
   const containerRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
+  // Update chart dimensions based on container size
   useEffect(() => {
     const updateDimensions = () => {
       if (containerRef.current) {
@@ -24,28 +27,45 @@ const ChartComponent = (props) => {
     return () => window.removeEventListener('resize', updateDimensions);
   }, []);
 
-  // Define the specific ages to show on the X-axis
+  // Filter data for specific ranges and set tick marks
   const specificAges = [currentAge, fromAge - 1, toAge];
+  const dataInRange = data.filter(d => parseFloat(d.name) >= currentAge && parseFloat(d.name) <= fromAge - 1);
 
-  // Define toAge as fromAge for clarity
-  toAge = fromAge;
-
-  // Filter data for the highlighted range (currentAge to fromAge - 1)
-  const dataInRange = props.data.filter(d => parseFloat(d.name) >= currentAge && parseFloat(d.name) <= fromAge - 1);
-
+  // Format numbers based on language (e.g., "万" for Chinese, "K/M" for English)
   const formatNumber = (num) => {
     if (num === null || num === undefined) return '';
     const absNum = Math.abs(num);
+    const lang = i18n.language;
 
-    if (absNum >= 1000000) {
-      const kValue = Math.round(absNum / 1000000);
-      return `${num < 0 ? '-' : ''}${kValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}M`;
-    } else if (absNum >= 1000) {
-      const kValue = Math.round(absNum / 1000);
-      return `${num < 0 ? '-' : ''}${kValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}K`;
+    if (lang.startsWith('zh')) {
+      const isTraditional = lang === 'zh-HK';
+      const suffix = isTraditional ? '萬' : '万';
+      if (absNum >= 10000) {
+        const wanValue = (absNum / 10000).toFixed(1).replace(/\.0$/, '');
+        return `${num < 0 ? '-' : ''}${wanValue}${suffix}`;
+      }
+      return num.toString();
+    } else {
+      if (absNum >= 1000000) {
+        const mValue = Math.round(absNum / 1000000);
+        return `${num < 0 ? '-' : ''}${mValue}M`;
+      } else if (absNum >= 1000) {
+        const kValue = Math.round(absNum / 1000);
+        return `${num < 0 ? '-' : ''}${kValue}K`;
+      }
+      return num.toString();
     }
-    return num.toString();
   };
+
+  // Convert English title to translation key (e.g., "Version 1" -> "version_1")
+  const getTranslationKey = (englishTitle) => {
+    const versionNumber = englishTitle.split(' ')[1];
+    return `version_${versionNumber}`;
+  };
+
+  // Get translated title using the translation key
+  const translationKey = getTranslationKey(title);
+  const translatedTitle = t(translationKey);
 
   return (
     <Card
@@ -58,14 +78,13 @@ const ChartComponent = (props) => {
         boxShadow: '0 2px 15px rgba(0,0,0,0.1)',
       }}
     >
-      {/* Add the title here */}
       <Typography variant="h6" align="center" sx={{ mt: 2 }}>
-        {title}
+        {translatedTitle}
       </Typography>
       <AreaChart
         width={dimensions.width}
-        height={dimensions.height - 40} // Adjust height to make room for the title
-        data={props.data}
+        height={dimensions.height - 40}
+        data={data}
         margin={{ top: 20, right: 30, left: 30, bottom: 20 }}
       >
         <defs>
@@ -84,12 +103,12 @@ const ChartComponent = (props) => {
           type="number"
           domain={[currentAge, toAge]}
           ticks={specificAges}
-          label={{ value: 'Age', position: 'bottom', offset: 0 }}
+          label={{ value: t('age'), position: 'bottom', offset: 0 }}
           tick={{ fill: '#667' }}
         />
         <YAxis
           label={{
-            value: 'Amount',
+            value: t('amount'),
             angle: -90,
             position: 'left',
             offset: 10,
@@ -98,13 +117,13 @@ const ChartComponent = (props) => {
           tick={{ fill: '#666' }}
         />
         <Tooltip
-          formatter={(value) => [`$${Number(value).toLocaleString()}`, 'Amount']}
-          labelFormatter={(label) => `Age: ${label}`}
+          formatter={(value) => [`$${Number(value).toLocaleString()}`, t('amount')]}
+          labelFormatter={(label) => `${t('age')}: ${label}`}
         />
         <Area
           type="monotone"
           dataKey="sum"
-          data={props.data}
+          data={data}
           fill="url(#gradientFillSecond)"
           stroke="none"
         />
@@ -118,7 +137,7 @@ const ChartComponent = (props) => {
         <Line
           type="monotone"
           dataKey="sum"
-          data={props.data}
+          data={data}
           stroke="#8884d8"
           strokeWidth={2}
           dot={false}
@@ -133,9 +152,9 @@ const ChartComponent = (props) => {
   );
 };
 
-// Set default props, including a default title
+// Default props
 ChartComponent.defaultProps = {
-  title: 'Retirement Savings', // Default title if none is provided
+  title: 'Version 1',
   data: [],
 };
 

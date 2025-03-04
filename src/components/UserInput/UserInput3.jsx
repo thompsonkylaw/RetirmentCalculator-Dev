@@ -1,5 +1,5 @@
-//working
 import React from 'react';
+import { useTranslation } from 'react-i18next'; // Import for i18n support
 import Card from '@mui/material/Card';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -7,6 +7,8 @@ import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 
 const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
+  const { t } = useTranslation(); // Hook to access translation function
+
   // Formatting functions
   const formatCurrency = (value) => `$${parseInt(value).toLocaleString('en-US')}`;
   const parseCurrency = (value) => parseInt(value.replace(/\D/g, ''), 10) || 0;
@@ -78,9 +80,9 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
         }
       `}</style>
 
-      <h2>Retirement Plan</h2>
+      <h2>{t('retirementPlan')}</h2>
       <div className="form-grid">
-        <label className="form-label">Monthly Income Goal</label>
+        <label className="form-label">{t('monthlyIncomeGoal')}</label>
         <TextField
           type="text"
           value={formatCurrency(inputs.retirementGoal)}
@@ -124,7 +126,7 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
           variant="outlined"
         />
 
-        <label className="form-label">Inflation Adjustment</label>
+        <label className="form-label">{t('inflationAdjustment')}</label>
         <input
           type="text"
           className="form-input"
@@ -132,7 +134,7 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
           onChange={(e) => setInputs({ ...inputs, inflationAdjustment: parseCurrency(e.target.value) })}
         />
 
-        <label className="form-label">Current Age</label>
+        <label className="form-label">{t('currentAge')}</label>
         <input
           type="number"
           className="form-input"
@@ -142,7 +144,7 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
           max={inputs.fromAge}
         />
 
-        <label className="form-label">Income Collection Ages</label>
+        <label className="form-label">{t('incomeCollectionAges')}</label>
         <div className="range-group">
           <input
             type="number"
@@ -161,7 +163,7 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
           />
         </div>
 
-        <label className="form-label">Post-Retirement Return</label>
+        <label className="form-label">{t('postRetirementReturn')}</label>
         <input
           type="text"
           className="form-input"

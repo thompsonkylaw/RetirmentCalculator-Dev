@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next'; // Import for i18n support
 import Card from '@mui/material/Card';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -6,6 +7,8 @@ import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 
 const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
+  const { t } = useTranslation(); // Hook to access translation function
+
   const formatCurrency = (value) => `$${parseInt(value).toLocaleString('en-US')}`;
   const parseCurrency = (value) => parseInt(value.replace(/\D/g, ''), 10) || 0;
 
@@ -99,18 +102,18 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
         }
       `}</style>
 
-      <h2>Saving & Investment</h2>
+      <h2>{t('savingAndInvestment')}</h2>
       <div style={{ overflowX: 'auto' }}>
         <div className="input-grid" style={{ minWidth: '515px' }}>
           {/* Headers */}
           <div />
-          <div className="grid-header">Stock</div>
-          <div className="grid-header">MPF</div>
-          <div className="grid-header">Other</div>
-          <div className="grid-header">Extra</div>
+          <div className="grid-header">{t('stock')}</div>
+          <div className="grid-header">{t('mpf')}</div>
+          <div className="grid-header">{t('other')}</div>
+          <div className="grid-header">{t('extra')}</div>
 
           {/* Monthly Savings Row */}
-          <div className="grid-label">Monthly Savings</div>
+          <div className="grid-label">{t('monthlySavings')}</div>
           {['stock', 'mpf', 'other', 'extra'].map((field) => {
             const isExtra = field === 'extra';
             const inputProps = isExtra
@@ -154,7 +157,7 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
           })}
 
           {/* Existing Assets Row */}
-          <div className="grid-label">Existing Assets</div>
+          <div className="grid-label">{t('existingAssets')}</div>
           {['stock', 'mpf', 'other', 'extra'].map((field) => (
             <TextField
               key={field}
@@ -166,7 +169,7 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
           ))}
 
           {/* Expected Return Row */}
-          <div className="grid-label">Expected Return</div>
+          <div className="grid-label">{t('expectedReturn')}</div>
           {['stock', 'mpf', 'other', 'extra'].map((field) => (
             <TextField
               key={field}

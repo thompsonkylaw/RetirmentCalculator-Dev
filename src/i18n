@@ -1,0 +1,108 @@
+import i18next from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+
+i18next
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init({
+    fallbackLng: 'en',
+    debug: true,
+    resources: {
+      en: {
+        translation: {
+          welcome: 'Welcome',
+          greeting: 'Hello, {{name}}!',
+          Ver: 'Ver',
+          "Reset Data": 'Reset Data',
+          Undo: 'Undo',
+          Redo: 'Redo',
+          retirementPlan: 'Retirement Plan',
+          monthlyIncomeGoal: 'Monthly Income Goal',
+          inflationAdjustment: 'Inflation Adjustment',
+          currentAge: 'Current Age',
+          incomeCollectionAges: 'Income Collection Ages',
+          postRetirementReturn: 'Post-Retirement Return',
+          savingAndInvestment: 'Saving & Investment',
+          stock: 'Stock',
+          mpf: 'MPF',
+          other: 'Other',
+          extra: 'Extra',
+          monthlySavings: 'Monthly Savings',
+          existingAssets: 'Existing Assets',
+          expectedReturn: 'Expected Return',
+          "age": "Age",
+  "amount": "Amount",
+  "version": "Version",
+  "version_1": "Version 1",
+  "version_2": "Version 2",
+  "version_3": "Version 3",
+  "version_4": "Version 4",
+        }
+      },
+      "zh-HK": {
+        translation: {
+          welcome: '歡迎',
+          greeting: '你好, {{name}}!',
+          Ver: '版本',
+          "Reset Data": '重置數據',
+          Undo: '撤銷',
+          Redo: '重做',
+          retirementPlan: '退休計劃',
+          monthlyIncomeGoal: '每月收入目標',
+          inflationAdjustment: '通脹調整',
+          currentAge: '當前年齡',
+          incomeCollectionAges: '收入領取年齡',
+          postRetirementReturn: '退休後回報',
+          savingAndInvestment: '儲蓄與投資',
+          stock: '股票',
+          mpf: '強積金',
+          other: '其他',
+          extra: '額外',
+          monthlySavings: '每月儲蓄',
+          existingAssets: '現有資產',
+          expectedReturn: '預期回報',
+          "age": "年齡",
+  "amount": "金額",
+  "version": "版本",
+  "version_1": "版本 1",
+  "version_2": "版本 2",
+  "version_3": "版本 3",
+  "version_4": "版本 4",
+        }
+      },
+      "zh-CN": {
+        translation: {
+          welcome: '欢迎',
+          greeting: '你好, {{name}}!',
+          Ver: '版本',
+          "Reset Data": '重置数据',
+          Undo: '撤销',
+          Redo: '重做',
+          retirementPlan: '退休计划',
+          monthlyIncomeGoal: '每月收入目标',
+          inflationAdjustment: '通胀调整',
+          currentAge: '当前年龄',
+          incomeCollectionAges: '收入领取年龄',
+          postRetirementReturn: '退休后回报',
+          savingAndInvestment: '储蓄与投资',
+          stock: '股票',
+          mpf: '强积金',
+          other: '其他',
+          extra: '额外',
+          monthlySavings: '每月储蓄',
+          existingAssets: '现有资产',
+          expectedReturn: '预期回报',
+          "age": "年齡",
+  "amount": "金額",
+  "version": "版本",
+  "version_1": "版本 1",
+  "version_2": "版本 2",
+  "version_3": "版本 3",
+  "version_4": "版本 4",
+        }
+      }
+    }
+  });
+
+export default i18next;
