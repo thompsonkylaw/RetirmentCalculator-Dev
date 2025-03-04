@@ -306,7 +306,7 @@ const App = () => {
             .result td { font-size: 18px; padding: 0px; text-align: center; }
             .seek-button { margin: 5px; padding: 10px 20px; font-size: 16px; cursor: pointer; }
           `}</style>
-          <Grid container spacing={1}>
+          <Grid container spacing={0}>
             <Grid item xs={12} md={6}>
               <UserInput3
                 inputs={currentVersionState.current.userInput3}

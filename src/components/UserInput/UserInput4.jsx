@@ -59,7 +59,7 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
     <Card
       sx={{
         background: '#fff',
-        padding: '0.3rem',
+        padding: '0.2rem',
         borderRadius: '10px',
         boxShadow: '0 2px 15px rgba(0,0,0,0.1)',
         minHeight: 362,
@@ -85,7 +85,7 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
         .grid-label {
           font-weight: 600;
           color: #2c3e50;
-          padding: 0.3rem;
+          padding: 0.4rem;
           text-align: right;
         }
         @media (max-width: 1300px) {

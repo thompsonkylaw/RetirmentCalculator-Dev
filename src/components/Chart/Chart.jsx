@@ -72,7 +72,7 @@ const ChartComponent = (props) => {
       ref={containerRef}
       sx={{
         width: '100%',
-        height: '450px',
+        height: '420px',
         margin: '20px 0',
         borderRadius: '10px',
         boxShadow: '0 2px 15px rgba(0,0,0,0.1)',

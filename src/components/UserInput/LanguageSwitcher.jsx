@@ -39,7 +39,7 @@ const LanguageSwitcher = ({
       <Grid container spacing={1}>
         {/* Version Select Buttons */}
         <Grid item xs={12}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-evenly' ,p:2}}>
             {[1, 2, 3, 4].map((ver) => (
               <Button
                 key={ver}
