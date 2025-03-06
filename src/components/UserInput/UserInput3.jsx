@@ -6,7 +6,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 
-const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
+const UserInput3 = ({ inputs, setInputs, onCalculate, appBarColor }) => {
   const { t } = useTranslation();
 
   // Formatting functions
@@ -43,7 +43,7 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
         borderColor: '#2c3e50',
       },
       '&.Mui-focused fieldset': {
-        borderColor: '#219a52',
+        borderColor: appBarColor,
         boxShadow: '0 0 0 3px rgba(52,152,219,0.2)',
       },
     },
@@ -86,7 +86,7 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
         }
       `}</style>
 
-      <h2>{t('retirementPlan')}</h2>
+<h2 style={{ color: appBarColor }}>{t('retirementPlan')}</h2>
       <div className="form-grid">
         {/* Monthly Income Goal */}
         <label className="form-label">{t('monthlyIncomeGoal')}</label>
@@ -101,7 +101,7 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
                 <IconButton
                   onClick={handleSearchClick}
                   sx={{
-                    backgroundColor: '#219a52',
+                    backgroundColor: appBarColor,
                     '&:hover': { backgroundColor: '#1e7a42' },
                     padding: '0.2rem',
                   }}
@@ -114,7 +114,7 @@ const UserInput3 = ({ inputs, setInputs, onCalculate }) => {
           sx={{
             ...textFieldSx,
             '& .MuiOutlinedInput-root fieldset': {
-              borderWidth: '4px',
+              borderWidth: 'px',
             },
           }}
           variant="outlined"

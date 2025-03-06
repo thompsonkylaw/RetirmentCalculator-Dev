@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Grid, Radio, RadioGroup, FormControlLabel, Button, Card, Box, Tooltip } from '@mui/material';
+import { Grid, Radio, RadioGroup, FormControlLabel, Button, Card, Box, Tooltip, Dialog } from '@mui/material'; // Add Dialog
 import UndoIcon from '@mui/icons-material/Undo';
 import RedoIcon from '@mui/icons-material/Redo';
+import Setting from './Setting'; // Import new Setting component
 
 const LanguageSwitcher = ({
   onReset,
@@ -12,14 +13,13 @@ const LanguageSwitcher = ({
   redoDisabled,
   currentVersion,
   onVersionSwitch,
+  setAppBarColor, 
+  appBarColor,// Add setAppBarColor prop
 }) => {
-  // Translation hook
   const { t, i18n } = useTranslation();
-
-  // State for language selection
   const [selectedLanguage, setSelectedLanguage] = useState(i18n.language || 'en');
+  const [settingsOpen, setSettingsOpen] = useState(false); // State for dialog
 
-  // Ensure a language is always selected
   useEffect(() => {
     if (!selectedLanguage) {
       setSelectedLanguage('en');
@@ -27,12 +27,15 @@ const LanguageSwitcher = ({
     }
   }, [selectedLanguage, i18n]);
 
-  // Handle language change
   const handleLanguageChange = (event) => {
     const newLanguage = event.target.value;
     setSelectedLanguage(newLanguage);
     i18n.changeLanguage(newLanguage);
   };
+
+  // Handlers for opening and closing the settings dialog
+  const handleOpenSettings = () => setSettingsOpen(true);
+  const handleCloseSettings = () => setSettingsOpen(false);
 
   return (
     <Card sx={{ p: 1, borderRadius: 3, boxShadow: 3, mt: 0 }}>
@@ -47,11 +50,11 @@ const LanguageSwitcher = ({
                 onClick={() => onVersionSwitch(`ver${ver}`)}
                 sx={{
                   borderRadius: '16px',
-                  minWidth: { xs: '60px', sm: '160px' }, // Responsive minWidth
+                  minWidth: { xs: '60px', sm: '160px' },
                   padding: '4px 10px',
-                  backgroundColor: currentVersion === `ver${ver}` ? '#219a52' : 'transparent',
-                  color: currentVersion === `ver${ver}` ? 'white' : '#219a52',
-                  borderColor: '#219a52',
+                  backgroundColor: currentVersion === `ver${ver}` ? appBarColor : 'transparent',
+                  color: currentVersion === `ver${ver}` ? 'white' : appBarColor,
+                  borderColor: appBarColor,
                   '&:hover': {
                     backgroundColor: currentVersion === `ver${ver}` ? '#1b7e43' : '#e0f2e9',
                   },
@@ -70,7 +73,7 @@ const LanguageSwitcher = ({
               variant="contained"
               onClick={onReset}
               sx={{
-                backgroundColor: '#219a52',
+                backgroundColor: appBarColor,
                 color: 'white',
                 '&:hover': { backgroundColor: '#1b7e43' },
               }}
@@ -84,7 +87,7 @@ const LanguageSwitcher = ({
                   onClick={onUndo}
                   disabled={undoDisabled}
                   sx={{
-                    backgroundColor: '#219a52',
+                    backgroundColor: appBarColor,
                     color: 'white',
                     '&:hover': { backgroundColor: '#1b7e43' },
                   }}
@@ -101,7 +104,7 @@ const LanguageSwitcher = ({
                   onClick={onRedo}
                   disabled={redoDisabled}
                   sx={{
-                    backgroundColor: '#219a52',
+                    backgroundColor: appBarColor,
                     color: 'white',
                     '&:hover': { backgroundColor: '#1b7e43' },
                   }}
@@ -127,23 +130,35 @@ const LanguageSwitcher = ({
             >
               <FormControlLabel
                 value="en"
-                control={<Radio sx={{ color: '#219a52', '&.Mui-checked': { color: '#219a52' } }} />}
+                control={<Radio sx={{ color: appBarColor, '&.Mui-checked': { color: appBarColor } }} />}
                 label="English"
               />
               <FormControlLabel
                 value="zh-HK"
-                control={<Radio sx={{ color: '#219a52', '&.Mui-checked': { color: '#219a52' } }} />}
+                control={<Radio sx={{ color: appBarColor, '&.Mui-checked': { color: appBarColor } }} />}
                 label="繁體中文"
               />
               <FormControlLabel
                 value="zh-CN"
-                control={<Radio sx={{ color: '#219a52', '&.Mui-checked': { color: '#219a52' } }} />}
+                control={<Radio sx={{ color: appBarColor, '&.Mui-checked': { color: appBarColor } }} />}
                 label="简體中文"
               />
             </RadioGroup>
           </Box>
         </Grid>
+
+        {/* Settings Button */}
+        <Grid item xs={12}>
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Button onClick={handleOpenSettings}>Settings</Button>
+          </Box>
+        </Grid>
       </Grid>
+
+      {/* Settings Dialog */}
+      <Dialog open={settingsOpen} onClose={handleCloseSettings}>
+        <Setting setAppBarColor={setAppBarColor} onClose={handleCloseSettings} />
+      </Dialog>
     </Card>
   );
 };

@@ -1,4 +1,4 @@
-import { useReducer, useEffect } from 'react';
+import { useReducer, useEffect, useState } from 'react'; // Add useState
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import AppBar from '@mui/material/AppBar';
@@ -13,10 +13,10 @@ import UserInput3 from './components/UserInput/UserInput3';
 import UserInput4 from './components/UserInput/UserInput4';
 import Chart from './components/Chart/Chart';
 import LanguageSwitcher from './components/UserInput/LanguageSwitcher';
-import { useTranslation } from 'react-i18next'; // Import for i18n support
+import { useTranslation } from 'react-i18next';
 import ResultTable4 from './components/ResultTable/ResultTable4';
 
-
+// Theme and initial state remain unchanged
 const theme = createTheme();
 
 const initialUserInput3 = {
@@ -56,7 +56,7 @@ const initialState = {
   currentVersion: 'ver1',
 };
 
-// Reducer defined above...
+// Reducer function remains unchanged
 const reducer = (state, action) => {
   const currentVersion = state.currentVersion;
   const currentVersionState = state.versions[currentVersion];
@@ -70,10 +70,7 @@ const reducer = (state, action) => {
           [currentVersion]: {
             ...currentVersionState,
             history: [...currentVersionState.history, currentVersionState.current],
-            current: {
-              ...currentVersionState.current,
-              userInput3: action.payload,
-            },
+            current: { ...currentVersionState.current, userInput3: action.payload },
             future: [],
           },
         },
@@ -86,10 +83,7 @@ const reducer = (state, action) => {
           [currentVersion]: {
             ...currentVersionState,
             history: [...currentVersionState.history, currentVersionState.current],
-            current: {
-              ...currentVersionState.current,
-              userInput4: action.payload,
-            },
+            current: { ...currentVersionState.current, userInput4: action.payload },
             future: [],
           },
         },
@@ -137,19 +131,26 @@ const reducer = (state, action) => {
         },
       };
     case 'SWITCH_VERSION':
-      return {
-        ...state,
-        currentVersion: action.payload,
-      };
+      return { ...state, currentVersion: action.payload };
     default:
       return state;
   }
 };
 
 const App = () => {
-  const { t } = useTranslation(); // 
+  const { t } = useTranslation();
   const [state, dispatch] = useReducer(reducer, initialState);
   const currentVersionState = state.versions[state.currentVersion];
+
+  // Add state for AppBar color
+  const [appBarColor, setAppBarColor] = useState(() => {
+    return localStorage.getItem('appBarColor') || 'green';
+  });
+
+  // Save appBarColor to local storage when it changes
+  useEffect(() => {
+    localStorage.setItem('appBarColor', appBarColor);
+  }, [appBarColor]);
 
   useEffect(() => {
     const versionsCurrent = {};
@@ -172,7 +173,7 @@ const App = () => {
     duration: currentVersionState.current.userInput3.toAge - currentVersionState.current.userInput3.fromAge,
   };
 
-  // Calculate tableData4 (pre-retirement growth)
+  // Calculation logic remains unchanged
   const tableData4 = [];
   const chartData = [];
   let row_Year = [];
@@ -206,7 +207,6 @@ const App = () => {
     chartData.push({ name: String(row_Age[i]), sum: row_sum[i] });
   }
 
-  // Calculate tableData3 (post-retirement drawdown)
   const tableData3 = [];
   let row_Year3 = [];
   let row_Age3 = [];
@@ -265,7 +265,6 @@ const App = () => {
   };
 
   const calculateRightSeek = (lastRowOfStock, lastRowOfMPF, lastRowOfOther) => {
-    // console.log('lastRowOfStock',lastRowOfStock);
     let P18;
     const P19 = currentVersionState.current.userInput4.existingAssets.extra;
     const P20 = currentVersionState.current.userInput4.expectedReturn.extra / 100;
@@ -295,7 +294,7 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box sx={{ p: { xs: 1, md: 0 }, minHeight: '100vh', backgroundColor: 'background.default' }}>
-        <AppBar position="static" sx={{ backgroundColor: '#219a52' }}>
+        <AppBar position="static" sx={{ backgroundColor: appBarColor }}> {/* Use appBarColor */}
           <Toolbar>
             <IconButton edge="start" color="inherit" aria-label="back">
               <ArrowBackIcon />
@@ -317,6 +316,7 @@ const App = () => {
                 inputs={currentVersionState.current.userInput3}
                 setInputs={updateUserInput3}
                 onCalculate={() => calculateLeftSeek(row_G[0])}
+                appBarColor={appBarColor} 
               />
             </Grid>
             <Grid item xs={12} md={7}>
@@ -324,6 +324,7 @@ const App = () => {
                 inputs={currentVersionState.current.userInput4}
                 setInputs={updateUserInput4}
                 onCalculate={() => calculateRightSeek(row_Stock[row_Stock.length - 1], row_MPF[row_MPF.length - 1], row_Other[row_Other.length - 1])}
+                appBarColor={appBarColor} 
               />
             </Grid>
             <Grid item xs={12}>
@@ -344,6 +345,8 @@ const App = () => {
                 redoDisabled={currentVersionState.future.length === 0}
                 currentVersion={state.currentVersion}
                 onVersionSwitch={handleVersionSwitch}
+                setAppBarColor={setAppBarColor}
+                appBarColor={appBarColor} // Pass setAppBarColor
               />
             </Grid>
             {/* <ResultTable4 data={tableData4} /> */}
@@ -361,6 +364,5 @@ function calculateValue(expectedReturn, monthlySaving, existingAsset) {
   const Lumpsum = existingAsset * Math.pow(1 + rate, 12);
   return FV + Lumpsum;
 }
-
 
 export default App;

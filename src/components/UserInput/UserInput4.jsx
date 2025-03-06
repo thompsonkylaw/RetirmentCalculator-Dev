@@ -7,7 +7,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 
-const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
+const UserInput4 = ({ inputs, setInputs, onCalculate, appBarColor }) => {
   const { t } = useTranslation();
 
   // Format currency values with a dollar sign and thousands separator
@@ -109,15 +109,37 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
         }
       `}</style>
 
-      <h2>{t('savingAndInvestment')}</h2>
+      <h2 style={{ color: appBarColor }}>{t('savingAndInvestment')}</h2>
       <div style={{ overflowX: 'auto' }}>
         <div className="input-grid" style={{ minWidth: '515px' }}>
           {/* Headers */}
           <div />
-          <div className="grid-header">{t('stock')}</div>
-          <div className="grid-header">{t('mpf')}</div>
-          <div className="grid-header">{t('other')}</div>
-          <div className="grid-header">{t('extra')}</div>
+          <div
+          className="grid-header"
+          style={{ backgroundColor: 'rgb(57, 102, 248)', color: 'white' }}
+        >
+          {t('stock')}
+        </div>
+        
+          <div
+          className="grid-header"
+          style={{ backgroundColor: 'rgb(255, 165, 0)', color: 'white' }}
+        >
+          {t('mpf')}
+        </div>
+        <div
+          className="grid-header"
+          style={{ backgroundColor: 'rgb(255, 192, 0)', color: 'white' }}
+        >
+          {t('other')}
+        </div>
+        <div
+          className="grid-header"
+          style={{ backgroundColor: 'rgb(15, 175, 63)', color: 'white' }}
+        >
+          {t('extra')}
+        </div>
+         
 
           {/* Monthly Savings Row */}
           <div className="grid-label">{t('monthlySavings')}</div>
@@ -133,7 +155,7 @@ const UserInput4 = ({ inputs, setInputs, onCalculate }) => {
                           if (event) event.currentTarget.blur();
                         }}
                         sx={{
-                          backgroundColor: '#219a52',
+                          backgroundColor: appBarColor,
                           '&:hover': {
                             backgroundColor: '#1e8f4a',
                           },

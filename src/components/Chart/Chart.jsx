@@ -27,11 +27,10 @@ const ChartComponent = (props) => {
     return () => window.removeEventListener('resize', updateDimensions);
   }, []);
 
-  // Filter data for specific ranges and set tick marks
-  const specificAges = [currentAge, fromAge - 1, toAge];
-  const dataInRange = data.filter(d => parseFloat(d.name) >= currentAge && parseFloat(d.name) <= fromAge - 1);
+  // Calculate the percentage where the color should change
+  const changePercentage = ((fromAge - currentAge) / (toAge - currentAge)) * 100;
 
-  // Format numbers based on language (e.g., "万" for Chinese, "K/M" for English)
+  // Format numbers based on language
   const formatNumber = (num) => {
     if (num === null || num === undefined) return '';
     const absNum = Math.abs(num);
@@ -57,13 +56,12 @@ const ChartComponent = (props) => {
     }
   };
 
-  // Convert English title to translation key (e.g., "Version 1" -> "version_1")
+  // Convert English title to translation key
   const getTranslationKey = (englishTitle) => {
     const versionNumber = englishTitle.split(' ')[1];
     return `version_${versionNumber}`;
   };
 
-  // Get translated title using the translation key
   const translationKey = getTranslationKey(title);
   const translatedTitle = t(translationKey);
 
@@ -88,13 +86,11 @@ const ChartComponent = (props) => {
         margin={{ top: 5, right: 30, left: 30, bottom: 30 }}
       >
         <defs>
-          <linearGradient id="gradientFillFirst" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="100%" stopColor="#219a64" stopOpacity={1} />
-            <stop offset="100%" stopColor="#219a64" stopOpacity={1} />
-          </linearGradient>
-          <linearGradient id="gradientFillSecond" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="100%" stopColor="#ff7700" stopOpacity={1} />
-            <stop offset="100%" stopColor="#ff7700" stopOpacity={1} />
+          <linearGradient id="gradientFill" x1="0%" y1="0" x2="100%" y2="0">
+            <stop offset="0%" stopColor="#86B79EFF" />
+            <stop offset={`${changePercentage}%`} stopColor="#219a64" />
+            <stop offset={`${changePercentage}%`} stopColor="#ff7700" />
+            <stop offset="100%" stopColor="#F8B67DFF" />
           </linearGradient>
         </defs>
         <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
@@ -102,7 +98,7 @@ const ChartComponent = (props) => {
           dataKey="name"
           type="number"
           domain={[currentAge, toAge]}
-          ticks={specificAges}
+          ticks={[currentAge, fromAge, toAge]}
           label={{ value: t('age'), position: 'bottom', offset: 0 }}
           tick={{ fill: '#667' }}
         />
@@ -123,21 +119,12 @@ const ChartComponent = (props) => {
         <Area
           type="monotone"
           dataKey="sum"
-          data={data}
-          fill="url(#gradientFillSecond)"
-          stroke="none"
-        />
-        <Area
-          type="monotone"
-          dataKey="sum"
-          data={dataInRange}
-          fill="url(#gradientFillFirst)"
+          fill="url(#gradientFill)"
           stroke="none"
         />
         <Line
           type="monotone"
           dataKey="sum"
-          data={data}
           stroke="#8884d8"
           strokeWidth={2}
           dot={false}
@@ -152,7 +139,6 @@ const ChartComponent = (props) => {
   );
 };
 
-// Default props
 ChartComponent.defaultProps = {
   title: 'Version 1',
   data: [],
