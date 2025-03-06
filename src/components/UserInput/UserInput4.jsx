@@ -116,26 +116,26 @@ const UserInput4 = ({ inputs, setInputs, onCalculate, appBarColor }) => {
           <div />
           <div
           className="grid-header"
-          style={{ backgroundColor: 'rgb(57, 102, 248)', color: 'white' }}
+          style={{ backgroundColor: 'rgb(38, 70, 83)', color: 'white' }}
         >
           {t('stock')}
         </div>
         
           <div
           className="grid-header"
-          style={{ backgroundColor: 'rgb(255, 165, 0)', color: 'white' }}
+          style={{ backgroundColor: 'rgb(231, 111, 81)', color: 'white' }}
         >
           {t('mpf')}
         </div>
         <div
           className="grid-header"
-          style={{ backgroundColor: 'rgb(255, 192, 0)', color: 'white' }}
+          style={{ backgroundColor: 'rgb(244, 162, 97)', color: 'white' }}
         >
           {t('other')}
         </div>
         <div
           className="grid-header"
-          style={{ backgroundColor: 'rgb(15, 175, 63)', color: 'white' }}
+          style={{ backgroundColor: 'rgb(42, 157, 143)', color: 'white' }}
         >
           {t('extra')}
         </div>
