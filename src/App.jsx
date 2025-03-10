@@ -294,9 +294,16 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box sx={{ p: { xs: 1, md: 0 }, minHeight: '100vh', backgroundColor: 'background.default' }}>
-        <AppBar position="static" sx={{ backgroundColor: appBarColor }}> {/* Use appBarColor */}
+        <AppBar position="static" sx={{ backgroundColor: appBarColor }}>
           <Toolbar>
-            <IconButton edge="start" color="inherit" aria-label="back">
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="back"
+              onClick={() => {
+                window.location.href = "https://portal.aimarketings.io/tool-list/";
+              }}
+            >
               <ArrowBackIcon />
             </IconButton>
             <Typography variant="h6" sx={{ flexGrow: 1 }}>
@@ -316,7 +323,7 @@ const App = () => {
                 inputs={currentVersionState.current.userInput3}
                 setInputs={updateUserInput3}
                 onCalculate={() => calculateLeftSeek(row_G[0])}
-                appBarColor={appBarColor} 
+                appBarColor={appBarColor}
               />
             </Grid>
             <Grid item xs={12} md={7}>
@@ -324,7 +331,7 @@ const App = () => {
                 inputs={currentVersionState.current.userInput4}
                 setInputs={updateUserInput4}
                 onCalculate={() => calculateRightSeek(row_Stock[row_Stock.length - 1], row_MPF[row_MPF.length - 1], row_Other[row_Other.length - 1])}
-                appBarColor={appBarColor} 
+                appBarColor={appBarColor}
               />
             </Grid>
             <Grid item xs={12}>
@@ -346,16 +353,16 @@ const App = () => {
                 currentVersion={state.currentVersion}
                 onVersionSwitch={handleVersionSwitch}
                 setAppBarColor={setAppBarColor}
-                appBarColor={appBarColor} // Pass setAppBarColor
+                appBarColor={appBarColor}
               />
             </Grid>
-            {/* <ResultTable4 data={tableData4} /> */}
           </Grid>
         </div>
       </Box>
     </ThemeProvider>
   );
 };
+
 
 function calculateValue(expectedReturn, monthlySaving, existingAsset) {
   const rate = expectedReturn / 100 / 12;

@@ -66,11 +66,11 @@ i18next
           expectedReturn: '預期回報',
           "age": "年齡",
   "amount": "金額",
-  "version": "版本",
-  "version_1": "版本 1",
-  "version_2": "版本 2",
-  "version_3": "版本 3",
-  "version_4": "版本 4",
+  "version": "情景",
+  "version_1": "情景 1",
+  "version_2": "情景 2",
+  "version_3": "情景 3",
+  "version_4": "情景 4",
         }
       },
       "zh-CN": {
@@ -98,11 +98,11 @@ i18next
           expectedReturn: '预期回报',
           "age": "年齡",
   "amount": "金額",
-  "version": "版本",
-  "version_1": "版本 1",
-  "version_2": "版本 2",
-  "version_3": "版本 3",
-  "version_4": "版本 4",
+  "version": "情景",
+  "version_1": "情景 1",
+  "version_2": "情景 2",
+  "version_3": "情景 3",
+  "version_4": "情景 4",
         }
       }
     }
