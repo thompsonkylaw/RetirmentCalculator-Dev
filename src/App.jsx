@@ -306,7 +306,7 @@ const App = () => {
             >
               <ArrowBackIcon />
             </IconButton>
-            <Typography variant="h6" sx={{ flexGrow: 1 }}>
+            <Typography variant="h6" sx={{ flexGrow: 1, color: 'white' }}>
               {t('Retirement Calculator')}
             </Typography>
           </Toolbar>
