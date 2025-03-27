@@ -274,16 +274,31 @@ const App = () => {
     const G20 = currentVersionState.current.userInput3.toAge;
     const G21 = currentVersionState.current.userInput3.postRetirementReturn / 100;
     const E20 = currentVersionState.current.userInput3.fromAge;
-
+  
     let G24;
     if (G21 === G18) {
       G24 = G17 * (G20 - E20 + 1) * 12 * Math.pow(1 + G18, E20 - G19);
     } else {
       G24 = (G17 * (1 - Math.pow((1 + G18) / (1 + G21), G20 - E20 + 1)) * 12 * Math.pow(1 + G18, E20 - G19) * (1 + G21)) / (G21 - G18);
     }
-
+  
     const lastRowOfExtra = G24 - lastRowOfStock - lastRowOfMPF - lastRowOfOther;
-    P18 = (lastRowOfExtra - P19 * (1 + P20 / 12) ** (12 * (E20 - G19))) * (P20 / 12) / ((1 + P20 / 12) ** (12 * (E20 - G19)) - 1);
+  
+    // Check if retirement age is greater than current age
+    if (E20 <= G19) {
+      console.error("Error: fromAge (E20) must be greater than currentAge (G19)");
+      P18 = 0; // Or handle differently, e.g., throw an error
+    } else {
+      const n = 12 * (E20 - G19); // Number of months
+      if (P20 === 0) {
+        P18 = (lastRowOfExtra - P19) / n;
+      } else {
+        const r = P20 / 12; // Monthly interest rate
+        const factor = Math.pow(1 + r, n);
+        P18 = (lastRowOfExtra - P19 * factor) * r / (factor - 1);
+      }
+    }
+  
     updateUserInput4({
       ...currentVersionState.current.userInput4,
       monthlySavings: { ...currentVersionState.current.userInput4.monthlySavings, extra: P18 },
