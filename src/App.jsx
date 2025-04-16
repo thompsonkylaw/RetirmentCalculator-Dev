@@ -1,4 +1,4 @@
-import { useReducer, useEffect, useState } from 'react'; // Add useState
+import { useReducer, useEffect, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import AppBar from '@mui/material/AppBar';
@@ -16,7 +16,6 @@ import LanguageSwitcher from './components/UserInput/LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
 import ResultTable4 from './components/ResultTable/ResultTable4';
 
-// Theme and initial state remain unchanged
 const theme = createTheme();
 
 const initialUserInput3 = {
@@ -56,10 +55,10 @@ const initialState = {
   currentVersion: 'ver1',
 };
 
-// Reducer function remains unchanged
 const reducer = (state, action) => {
   const currentVersion = state.currentVersion;
-  const currentVersionState = state.versions[currentVersion];
+  const versionToUpdate = action.version || currentVersion;
+  const versionState = state.versions[versionToUpdate];
 
   switch (action.type) {
     case 'UPDATE_INPUT3':
@@ -67,10 +66,10 @@ const reducer = (state, action) => {
         ...state,
         versions: {
           ...state.versions,
-          [currentVersion]: {
-            ...currentVersionState,
-            history: [...currentVersionState.history, currentVersionState.current],
-            current: { ...currentVersionState.current, userInput3: action.payload },
+          [versionToUpdate]: {
+            ...versionState,
+            history: [...versionState.history, versionState.current],
+            current: { ...versionState.current, userInput3: action.payload },
             future: [],
           },
         },
@@ -80,18 +79,18 @@ const reducer = (state, action) => {
         ...state,
         versions: {
           ...state.versions,
-          [currentVersion]: {
-            ...currentVersionState,
-            history: [...currentVersionState.history, currentVersionState.current],
-            current: { ...currentVersionState.current, userInput4: action.payload },
+          [versionToUpdate]: {
+            ...versionState,
+            history: [...versionState.history, versionState.current],
+            current: { ...versionState.current, userInput4: action.payload },
             future: [],
           },
         },
       };
     case 'UNDO':
-      if (currentVersionState.history.length === 0) return state;
-      const previous = currentVersionState.history[currentVersionState.history.length - 1];
-      const newHistory = currentVersionState.history.slice(0, -1);
+      if (state.versions[currentVersion].history.length === 0) return state;
+      const previous = state.versions[currentVersion].history[state.versions[currentVersion].history.length - 1];
+      const newHistory = state.versions[currentVersion].history.slice(0, -1);
       return {
         ...state,
         versions: {
@@ -99,21 +98,21 @@ const reducer = (state, action) => {
           [currentVersion]: {
             current: previous,
             history: newHistory,
-            future: [currentVersionState.current, ...currentVersionState.future],
+            future: [state.versions[currentVersion].current, ...state.versions[currentVersion].future],
           },
         },
       };
     case 'REDO':
-      if (currentVersionState.future.length === 0) return state;
-      const next = currentVersionState.future[0];
-      const newFuture = currentVersionState.future.slice(1);
+      if (state.versions[currentVersion].future.length === 0) return state;
+      const next = state.versions[currentVersion].future[0];
+      const newFuture = state.versions[currentVersion].future.slice(1);
       return {
         ...state,
         versions: {
           ...state.versions,
           [currentVersion]: {
             current: next,
-            history: [...currentVersionState.history, currentVersionState.current],
+            history: [...state.versions[currentVersion].history, state.versions[currentVersion].current],
             future: newFuture,
           },
         },
@@ -142,12 +141,10 @@ const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const currentVersionState = state.versions[state.currentVersion];
 
-  // Add state for AppBar color
   const [appBarColor, setAppBarColor] = useState(() => {
     return localStorage.getItem('appBarColor') || 'green';
   });
 
-  // Save appBarColor to local storage when it changes
   useEffect(() => {
     localStorage.setItem('appBarColor', appBarColor);
   }, [appBarColor]);
@@ -167,13 +164,18 @@ const App = () => {
   const handleReset = () => dispatch({ type: 'RESET' });
   const handleVersionSwitch = (version) => dispatch({ type: 'SWITCH_VERSION', payload: version });
 
+  const copyVersion = (source, target) => {
+    const sourceInputs = state.versions[source].current;
+    dispatch({ type: 'UPDATE_INPUT3', payload: sourceInputs.userInput3, version: target });
+    dispatch({ type: 'UPDATE_INPUT4', payload: sourceInputs.userInput4, version: target });
+  };
+
   const combinedInputs = {
     ...currentVersionState.current.userInput3,
     ...currentVersionState.current.userInput4,
     duration: currentVersionState.current.userInput3.toAge - currentVersionState.current.userInput3.fromAge,
   };
 
-  // Calculation logic remains unchanged
   const tableData4 = [];
   const chartData = [];
   let row_Year = [];
@@ -284,16 +286,15 @@ const App = () => {
   
     const lastRowOfExtra = G24 - lastRowOfStock - lastRowOfMPF - lastRowOfOther;
   
-    // Check if retirement age is greater than current age
     if (E20 <= G19) {
       console.error("Error: fromAge (E20) must be greater than currentAge (G19)");
-      P18 = 0; // Or handle differently, e.g., throw an error
+      P18 = 0;
     } else {
-      const n = 12 * (E20 - G19); // Number of months
+      const n = 12 * (E20 - G19);
       if (P20 === 0) {
         P18 = (lastRowOfExtra - P19) / n;
       } else {
-        const r = P20 / 12; // Monthly interest rate
+        const r = P20 / 12;
         const factor = Math.pow(1 + r, n);
         P18 = (lastRowOfExtra - P19 * factor) * r / (factor - 1);
       }
@@ -369,6 +370,7 @@ const App = () => {
                 onVersionSwitch={handleVersionSwitch}
                 setAppBarColor={setAppBarColor}
                 appBarColor={appBarColor}
+                copyVersion={copyVersion}
               />
             </Grid>
           </Grid>
@@ -377,7 +379,6 @@ const App = () => {
     </ThemeProvider>
   );
 };
-
 
 function calculateValue(expectedReturn, monthlySaving, existingAsset) {
   const rate = expectedReturn / 100 / 12;

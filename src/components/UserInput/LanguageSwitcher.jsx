@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Grid, Radio, RadioGroup, FormControlLabel, Button, Card, Box, Tooltip, Dialog } from '@mui/material'; // Add Dialog
+import { Grid, Radio, RadioGroup, FormControlLabel, Button, Card, Box, Tooltip, Dialog, IconButton } from '@mui/material';
 import UndoIcon from '@mui/icons-material/Undo';
 import RedoIcon from '@mui/icons-material/Redo';
-import Setting from './Setting'; // Import new Setting component
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import Setting from './Setting';
 
 const LanguageSwitcher = ({
   onReset,
@@ -13,12 +14,13 @@ const LanguageSwitcher = ({
   redoDisabled,
   currentVersion,
   onVersionSwitch,
-  setAppBarColor, 
-  appBarColor,// Add setAppBarColor prop
+  setAppBarColor,
+  appBarColor,
+  copyVersion,
 }) => {
   const { t, i18n } = useTranslation();
   const [selectedLanguage, setSelectedLanguage] = useState(i18n.language || 'en');
-  const [settingsOpen, setSettingsOpen] = useState(false); // State for dialog
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   useEffect(() => {
     if (!selectedLanguage) {
@@ -33,35 +35,48 @@ const LanguageSwitcher = ({
     i18n.changeLanguage(newLanguage);
   };
 
-  // Handlers for opening and closing the settings dialog
   const handleOpenSettings = () => setSettingsOpen(true);
   const handleCloseSettings = () => setSettingsOpen(false);
 
   return (
     <Card sx={{ p: 1, borderRadius: 3, boxShadow: 3, mt: 0 }}>
       <Grid container spacing={1}>
-        {/* Version Select Buttons */}
+        {/* Version Select Buttons with Copy Buttons */}
         <Grid item xs={12}>
           <Box sx={{ display: 'flex', justifyContent: 'space-evenly', p: 2 }}>
-            {[1, 2, 3, 4].map((ver) => (
-              <Button
-                key={ver}
-                variant={currentVersion === `ver${ver}` ? 'contained' : 'outlined'}
-                onClick={() => onVersionSwitch(`ver${ver}`)}
-                sx={{
-                  borderRadius: '16px',
-                  minWidth: { xs: '60px', sm: '160px' },
-                  padding: '4px 10px',
-                  backgroundColor: currentVersion === `ver${ver}` ? appBarColor : 'transparent',
-                  color: currentVersion === `ver${ver}` ? 'white' : appBarColor,
-                  borderColor: appBarColor,
-                  '&:hover': {
-                    backgroundColor: currentVersion === `ver${ver}` ? '#1b7e43' : '#e0f2e9',
-                  },
-                }}
-              >
-                {t('Ver')} {ver}
-              </Button>
+            {[1, 2, 3, 4].map((ver, index) => (
+              <React.Fragment key={ver}>
+                <Button
+                  variant={currentVersion === `ver${ver}` ? 'contained' : 'outlined'}
+                  onClick={() => onVersionSwitch(`ver${ver}`)}
+                  sx={{
+                    borderRadius: '16px',
+                    minWidth: { xs: '60px', sm: '160px' },
+                    padding: '4px 10px',
+                    backgroundColor: currentVersion === `ver${ver}` ? appBarColor : 'transparent',
+                    color: currentVersion === `ver${ver}` ? 'white' : appBarColor,
+                    borderColor: appBarColor,
+                    '&:hover': {
+                      backgroundColor: currentVersion === `ver${ver}` ? '#1b7e43' : '#e0f2e9',
+                    },
+                  }}
+                >
+                  {t('Ver')} {ver}
+                </Button>
+                {index < 3 && (
+                  <IconButton
+                    onClick={() => copyVersion(`ver${ver}`, `ver${ver + 1}`)}
+                    sx={{
+                      color: appBarColor,
+                      '&:hover': {
+                        backgroundColor: '#e0f2e9',
+                      },
+                    }}
+                  >
+                    <ArrowForwardIcon />
+                  </IconButton>
+                )}
+              </React.Fragment>
             ))}
           </Box>
         </Grid>
