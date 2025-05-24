@@ -103,6 +103,7 @@ const reducer = (state, action) => {
           },
         },
       };       
+      
     case 'REDO':
       if (state.versions[currentVersion].future.length === 0) return state;
       const next = state.versions[currentVersion].future[0];
@@ -118,7 +119,7 @@ const reducer = (state, action) => {
           },
         },
       };
-      
+
     case 'RESET':
       return {
         ...state,
