@@ -102,7 +102,8 @@ const reducer = (state, action) => {
             future: [state.versions[currentVersion].current, ...state.versions[currentVersion].future],
           },
         },
-      };
+      }; 
+      
     case 'REDO':
       if (state.versions[currentVersion].future.length === 0) return state;
       const next = state.versions[currentVersion].future[0];
